@@ -1,3 +1,9 @@
 .home-page {
   background-color: green;
 }
+
+/* modal */
+
+.size-input {
+  height: 1rem;
+}
