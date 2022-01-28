@@ -24,7 +24,7 @@ class NoteTags(models.Model):
 
 class Notes(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=False, blank=false, )
+        User, on_delete=models.CASCADE, null=False, blank=False, )
     note_name = models.CharField(max_length=100, null=False, blank=False)
     note_path = models.CharField(max_length=300)
     note_tags = models.ForeignKey(
@@ -34,17 +34,17 @@ class Notes(models.Model):
         return f'{self.note_name} {self.note_tags}'
 
 
-class FileTypes():
-    file_type = models.CharField(max_length=20)
+class FileTypes(models.Model):
+    file_type = models.CharField(max_length=20, unique=True)
     file_extention = models.CharField(max_length=5)
 
 
 class Files(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, null=False, blank=False)
-    file_name = models.CharField()
+    file_name = models.CharField(max_length=100)
     file_type = models.ForeignKey(
-        FileTypes, on_delete=models.CASCADE, null=False, blank=False, )
+        FileTypes, to_field='file_type', on_delete=models.CASCADE, null=False, blank=False, )
     file_date = models.DateField()
     file_path = models.CharField(max_length=300)
 
