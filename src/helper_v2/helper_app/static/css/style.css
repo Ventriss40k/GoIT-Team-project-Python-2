@@ -1,3 +1,37 @@
 .home-page {
   background-color: green;
 }
+
+.cursor {
+  cursor: pointer;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+/* modal-note */
+
+.size-input {
+  height: 1rem;
+}
+
+.tags-container {
+  display: flex;
+  flex-direction: row;
+  margin-top: 0;
+}
+
+.tag {
+  padding: 1px 5px;
+  border: 1px solid #000;
+  border-radius: 4px;
+}
+
+.tag:not(:first-child) {
+  margin-left: 10px;
+}
+
+.del-tag {
+  margin-left: 1px;
+}

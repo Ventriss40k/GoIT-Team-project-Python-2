@@ -1,0 +1,50 @@
+{% extends 'assistant/index.html' %} {% block content %}
+<nav>
+  <div class="blue nav-wrapper">
+    <a href="/" class="brand-logo center">Assistant</a>
+    <ul class="left hide-on-med-and-down">
+      <li><a href="/contacts">Contacts</a></li>
+      <li class="active"><a href="/notes">Notes</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="/aboutUs">About Us</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <h1>hello, this is notes page</h1>
+  <button class="btn waves-effect left modal-trigger" href="#noteModal">
+    <i class="material-icons white-text left">add_circle_outline</i>
+    Add
+  </button>
+  <div id="noteModal" class="modal">
+    <div class="modal-content">
+      <h4>Add Note</h4>
+      <form method="post">
+        {% csrf_token %}
+        <label for="title"
+          >Title
+          <input name="title" id="title" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="description"
+          >Description
+          <input name="description" id="description" autocomplete="off" style="height: 2rem" />
+        </label>
+        <label for="tagInput">
+          Tags(press enter after every tag)
+          <input type="text" name="tagInput" id="tagInput" />
+          <input type="hidden" name="tagsString" />
+        </label>
+
+        <ul id="tagsContainer" class="tags-container"></ul>
+        <button type="submit" class="btn">Add</button>
+      </form>
+    </div>
+  </div>
+</div>
+<script>
+  let elem = document.querySelector('.modal');
+  let instance = M.Modal.init(elem);
+</script>
+
+{% endblock %}

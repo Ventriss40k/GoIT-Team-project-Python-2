@@ -1,9 +1,66 @@
 {% extends 'assistant/index.html' %} {% block content %}
+<nav>
+  <div class="blue nav-wrapper">
+    <a href="/" class="brand-logo center">Assistant</a>
+    <ul class="left hide-on-med-and-down">
+      <li class="active"><a class="active" href="/contacts">Contacts</a></li>
+      <li><a href="/notes">Notes</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="/aboutUs">About Us</a></li>
+    </ul>
+  </div>
+</nav>
 <div class="container">
   <h1>hello, this is contacts page</h1>
-  <p>Anton</p>
-  <p>Viktor</p>
-  <p>Yurii</p>
+  <button class="btn waves-effect left modal-trigger" href="#contactModal">
+    <i class="material-icons white-text left">add_circle_outline</i>
+    Add
+  </button>
+  <div id="contactModal" class="modal">
+    <div class="modal-content">
+      <h4>Add Contact</h4>
+      <form method="post">
+        {% csrf_token %}
+        <label for="name"
+          >Name
+          <input name="name" id="name" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="phone"
+          >Phone
+          <input name="phone" id="phone" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="email"
+          >Email
+          <input name="email" id="email" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="address"
+          >Address
+          <input name="address" id="address" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="birthday"
+          >Birthday:
+          <input
+            type="date"
+            id="birthday"
+            name="birthday"
+            style="height: 2rem"
+            value=""
+            min=""
+            max=""
+          />
+        </label>
+        <button type="submit" class="btn">Add</button>
+      </form>
+    </div>
+  </div>
 </div>
+<script>
+  let elem = document.querySelector('.modal');
+  let instance = M.Modal.init(elem);
+</script>
 
 {% endblock %}
