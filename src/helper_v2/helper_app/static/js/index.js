@@ -1,56 +1,53 @@
 (function () {
-  document.querySelector('#categoryInput').addEventListener('keydown', CategoryInput);
-  function CategoryInput(e) {
+  document.querySelector('#tagInput').addEventListener('keydown', tagInput);
+  function tagInput(e) {
     if (e.keyCode != 13) {
       return;
     }
 
     e.preventDefault();
 
-    let categoryName = this.value;
+    let tagName = this.value;
     this.value = '';
-    addNewCategory(categoryName);
-    updateCategoriesString();
+    addNewTag(tagName);
+    updateTagsString();
   }
 
-  function addNewCategory(name) {
-    let categoriesContainer = document.querySelector('#categoriesContainer');
+  function addNewTag(name) {
+    let tagsContainer = document.querySelector('#tagsContainer');
     if (name == ' ') {
       return;
     }
-    let categoriesMarkup = `
-      <li class="category">
+    let tagsMarkup = `
+      <li class="tag">
         <span class="name">${name}</span>
-        <span onClick="removeCategory(this)" class="btnRemove bold">X</span>
+        <span onClick="removeTag(this)" class="btnRemove bold cursor red-text del-tag">X</span>
       </li>
           `;
-    categoriesContainer.insertAdjacentHTML('beforeend', categoriesMarkup);
+    tagsContainer.insertAdjacentHTML('beforeend', tagsMarkup);
   }
 })();
 
-function fetchCategoryArray() {
-  let categories = [];
-  let categoriesArray = document.querySelectorAll('.category');
-  categoriesArray.forEach(e => {
+function fetchTagArray() {
+  let tags = [];
+  let tagsArray = document.querySelectorAll('.tag');
+  tagsArray.forEach(e => {
     nameItem = e.querySelector('.name').innerHTML;
     if (nameItem === '') {
       return;
     }
-    categories.push(nameItem);
+    tags.push(nameItem);
   });
-  return categories;
+  return tags;
 }
 
-function updateCategoriesString() {
-  let categoriesArray = fetchCategoryArray();
-  let categoriesString = document.querySelector('input[name="categoriesString"]');
-  categoriesString.value = categoriesArray.join(',');
+function updateTagsString() {
+  let tagsArray = fetchTagArray();
+  let tagsString = document.querySelector('input[name="tagsString"]');
+  tagsString.value = tagsArray.join(',');
 }
 
-function removeCategory(e) {
+function removeTag(e) {
   e.parentElement.remove();
-  updateCategoriesString();
+  updateTagsString();
 }
-
-let elem = document.querySelector('.modal');
-let instance = M.Modal.init(elem);
