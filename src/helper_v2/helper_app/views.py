@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import TemplateView
 from django.views.generic.list import ListView
+from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.text import slugify
 from .models import Contacts, Notes, NoteTags, Files, FileTypes
+from django.urls import reverse_lazy
 # import json
 
 # from .forms import ExpenseForm, FilterForm
@@ -44,6 +46,17 @@ class ContactsView(ListView):
         if email_input:
             context['contacts'] = context['contacts'].filter(
                 email=email_input)
+
+
+class AddContact(CreateView):
+    model = Contacts
+    fields = ['first_name', 'last_name',
+              'phone_number', 'email', 'b_day', 'is_favorite']
+    success_url = reverse_lazy('contacts')
+
+    def form_valid(self, form):
+        # form.instance.user = self.request.user
+        return super(AddContacts, self).form_valid(form)
 
 
 class NotesView(TemplateView):
