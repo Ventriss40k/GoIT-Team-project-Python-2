@@ -54,7 +54,7 @@ class HomeView(TemplateView):
     template_name = "assistant/home.html"
 
 
-class ContactsView(ListView):
+class ContactsView(LoginRequiredMixin, ListView):
     template_name = "assistant/contacts.html"
     model = Contacts
     context_object_name = 'contacts'
@@ -85,7 +85,7 @@ class ContactsView(ListView):
                 email=email_input)
 
 
-class AddContact(CreateView):
+class AddContact(LoginRequiredMixin, CreateView):
     model = Contacts
     fields = ['first_name', 'last_name',
               'phone_number', 'email', 'b_day', 'is_favorite']
@@ -94,6 +94,27 @@ class AddContact(CreateView):
     def form_valid(self, form):
         # form.instance.user = self.request.user
         return super(AddContacts, self).form_valid(form)
+
+
+class UpdateContact(LoginRequiredMixin, UpdateView):
+    model = Contacts
+    fields = ['first_name', 'last_name',
+              'phone_number', 'email', 'b_day', 'is_favorite']
+    success_url = reverse_lazy('contacts')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(UpdateContact, self).form_valid(form)
+
+
+class DeleteContact(LoginRequiredMixin, DeleteView):
+    model = Contacts
+    context_object_name = 'contacts'
+    success_url = reverse_lazy('contacts')
+
+    def get_queryset(self):
+        owner = self.request.user
+        return self.model.objects.filter(user=owner)
 
 
 class NotesView(TemplateView):
