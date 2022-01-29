@@ -21,9 +21,14 @@
       <h4>Add Contact</h4>
       <form method="post">
         {% csrf_token %}
-        <label for="name"
-          >Name
-          <input name="name" id="name" autocomplete="off" style="height: 2rem" />
+        <label for="firstName"
+          >First name
+          <input name="firstName" id="firstName" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="lastName"
+          >Last name
+          <input name="lastName" id="lastName" autocomplete="off" style="height: 2rem" />
         </label>
 
         <label for="phone"
@@ -34,11 +39,6 @@
         <label for="email"
           >Email
           <input name="email" id="email" autocomplete="off" style="height: 2rem" />
-        </label>
-
-        <label for="address"
-          >Address
-          <input name="address" id="address" autocomplete="off" style="height: 2rem" />
         </label>
 
         <label for="birthday"
