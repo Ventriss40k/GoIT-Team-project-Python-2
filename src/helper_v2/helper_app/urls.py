@@ -8,4 +8,6 @@ urlpatterns = [
     path('notes', views.NotesView.as_view()),
     path('news', views.NewsView.as_view()),
     path('aboutUs', views.AboutView.as_view()),
+    path('login', views.LoginView().as_view()),
+    path('register', views.RegisterPage().as_view()),
 ]
