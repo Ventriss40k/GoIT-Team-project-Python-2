@@ -24,6 +24,7 @@ from .models import Contacts, Notes, NoteTags, Files, FileTypes
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
+
 class CustomLoginView(LoginView):
     template_name = 'accounts/login.html'
     fields = '__all__'
@@ -137,7 +138,7 @@ class NewsView(View):
         async with aiohttp.ClientSession() as session:
             async with session.get(url, ssl=False) as response:
                 result = await response.json()
-                return result['articles']    
+                return result['articles']
 
     async def get(self, request, *args, **kwargs):
         context = {
@@ -145,7 +146,7 @@ class NewsView(View):
         }
         return render(request, self.template_name, context)
 
-    
+
 class AboutView(TemplateView):
     template_name = "assistant/about_us.html"
 
