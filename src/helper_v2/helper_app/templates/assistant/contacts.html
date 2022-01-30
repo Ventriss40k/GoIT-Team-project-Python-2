@@ -20,7 +20,7 @@
     <div class="modal-content">
       <h4>Add Contact</h4>
       <form method="post">
-        {% csrf_token %}
+        {% csrf_token %} {{form.as_p}}
         <label for="firstName"
           >First name
           <input name="firstName" id="firstName" autocomplete="off" style="height: 2rem" />
