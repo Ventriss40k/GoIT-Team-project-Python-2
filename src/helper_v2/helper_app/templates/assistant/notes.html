@@ -6,6 +6,7 @@
       <li><a href="/contacts">Contacts</a></li>
       <li class="active"><a href="/notes">Notes</a></li>
       <li><a href="/news">News</a></li>
+      <li><a href="/files">Files</a></li>
       <li><a href="/aboutUs">About Us</a></li>
     </ul>
   </div>
@@ -20,7 +21,7 @@
     <div class="modal-content">
       <h4>Add Note</h4>
       <form method="post">
-        {% csrf_token %}
+        {% csrf_token %} {{form.as_p}}
         <label for="title"
           >Title
           <input name="title" id="title" autocomplete="off" style="height: 2rem" />

@@ -1,6 +1,6 @@
 from django import conf
 from django.utils.decorators import classonlymethod
-from django.views.generic import TemplateView, View
+from django.views.generic import View, TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
@@ -21,15 +21,11 @@ import aiohttp
 import os
 from .models import Contacts, Notes, NoteTags, Files, FileTypes
 
-# import json
-
-# from .forms import ExpenseForm, FilterForm
-
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
 class CustomLoginView(LoginView):
-    template_name = 'helper_app/login.html'
+    template_name = 'accounts/login.html'
     fields = '__all__'
     redirect_authenticated_user = True
 
@@ -38,7 +34,7 @@ class CustomLoginView(LoginView):
 
 
 class RegisterPage(FormView):
-    template_name = 'helper_app/register.html'
+    template_name = 'accounts/register.html'
     form_class = UserCreationForm
     redirect_authenticated_user = True
     success_url = reverse_lazy('home')
@@ -152,3 +148,8 @@ class NewsView(View):
     
 class AboutView(TemplateView):
     template_name = "assistant/about_us.html"
+
+
+class FilesView(TemplateView):
+    template_name = "assistant/files.html"
+
