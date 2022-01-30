@@ -1,0 +1,17 @@
+{% extends 'helper_app\index.html' %}
+{% block content %}
+
+<div class="header bar">
+    <h1>Login</h1>
+</div>
+
+<div>
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input class="button" type="submit" value="Login">
+    </form>
+    <p>Do not have an account yet? <a href="{% url 'register'%}"></a> </p>
+</div>
+
+{% endblock content %}
