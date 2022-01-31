@@ -61,9 +61,10 @@ class ContactsView(LoginRequiredMixin, ListView):
     model = Contacts
     context_object_name = 'contacts'
 
-    def get_context_data(self, *kwargs):
-        context = super().get_context_data(*kwargs)
-        context['contacts'] = context['contacts']
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['contacts'] = context['contacts'].filter(
+            user=self.request.user)
         context['count'] = context['contacts'].count()
 
         first_name_input = self.request.GET.get('serch-by-name') or ''
@@ -85,6 +86,7 @@ class ContactsView(LoginRequiredMixin, ListView):
         if email_input:
             context['contacts'] = context['contacts'].filter(
                 email=email_input)
+        return context
 
 
 class AddContact(LoginRequiredMixin, CreateView):
@@ -94,8 +96,8 @@ class AddContact(LoginRequiredMixin, CreateView):
     success_url = reverse_lazy('contacts')
 
     def form_valid(self, form):
-        # form.instance.user = self.request.user
-        return super(AddContacts, self).form_valid(form)
+        form.instance.user = self.request.user
+        return super(AddContact, self).form_valid(form)
 
 
 class UpdateContact(LoginRequiredMixin, UpdateView):
@@ -153,4 +155,3 @@ class AboutView(TemplateView):
 
 class FilesView(TemplateView):
     template_name = "assistant/files.html"
-
