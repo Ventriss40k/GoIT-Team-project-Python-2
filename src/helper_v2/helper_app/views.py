@@ -24,6 +24,7 @@ import os
 from .models import Contacts, Notes, NoteTags, Files, FileTypes
 from .forms import PositionForm
 
+
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
 
@@ -70,26 +71,35 @@ class ContactsView(LoginRequiredMixin, ListView):
             user=self.request.user)
         context['count'] = context['contacts'].count()
 
-        first_name_input = self.request.GET.get('serch-by-name') or ''
+        first_name_input = self.request.GET.get('search-by-name') or ''
+
         if first_name_input:
             context['contacts'] = context['contacts'].filter(
                 first_name=first_name_input)
 
-        last_name_input = self.request.GET.get('serch-by-last-name') or ''
+        last_name_input = self.request.GET.get('search-by-last-name') or ''
         if last_name_input:
             context['contacts'] = context['contacts'].filter(
                 last_name=last_name_input)
 
-        phone_input = self.request.GET.get('serch-by-phone-number') or ''
+        phone_input = self.request.GET.get('search-by-phone-number') or ''
         if phone_input:
             context['contacts'] = context['contacts'].filter(
                 phone_number=phone_input)
 
-        email_input = self.request.GET.get('serch-by-email') or ''
+        email_input = self.request.GET.get('search-by-email') or ''
         if email_input:
             context['contacts'] = context['contacts'].filter(
                 email=email_input)
         return context
+
+        def get_birthdays(self, **kwargs):
+            birthdays = []
+            context = super().get_context_data(**kwargs)
+            context['contacts'] = context['contacts'].filter(
+                user=self.request.user).filter(b_day < timezone.datetime.now().date())
+            print(context)
+            return "context['contacts']"
 
 
 class AddContact(LoginRequiredMixin, CreateView):
