@@ -63,9 +63,9 @@
 <div id="Contacts">
 
   {% for contact in contacts %}
-    <a style="text-decoration-line: underline;" href="{% url 'contact-update' %}">{{contact}}</a>
+    <a style="text-decoration-line: underline;" href="{% url 'contact-update' contact.id  %}">{{contact}}</a>
     <div class="contact-controls">
-      <a class="delete-link" href="{% url 'contact-delete' %}" 
+      <a class="delete-link" href="{% url 'contact-delete' contact.id %}" 
         style="font-size: x-small; margin-left: 50;">&#215; click to delete </a>
       <span class="handle">&nbsp;&#10247;</span>
     </div>
