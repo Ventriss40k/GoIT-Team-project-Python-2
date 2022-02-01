@@ -1,4 +1,6 @@
-from django import conf
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.permissions import AllowAny
 from django.utils.decorators import classonlymethod
 from django.views.generic import View, TemplateView
 from django.urls import reverse_lazy
@@ -14,12 +16,12 @@ from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db import transaction
 
-from django.http import HttpResponseRedirect, HttpResponse
+from rest_framework.response import Response
 from dotenv import load_dotenv
-import asyncio
-import aiohttp
+import requests
 import os
-from .models import Contacts, Notes, NoteTags, Files, FileTypes
+from .models import Contacts, Note, Files, FileTypes
+from .serializer import NoteSerializer
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -119,30 +121,39 @@ class DeleteContact(LoginRequiredMixin, DeleteView):
         return self.model.objects.filter(user=owner)
 
 
-class NotesView(TemplateView):
+class NotesView(ListCreateAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    renderer_classes = [TemplateHTMLRenderer]
     template_name = "assistant/notes.html"
+    permission_classes = [AllowAny,]
 
 
-class NewsView(View):
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        data = {obj['id']: obj for obj in serializer.data}
+        return Response({'results': data})
+
+
+    def perform_create(self, serializer):
+        return serializer.save()
+
+
+
+class NewsView(ListAPIView):
     template_name = "assistant/news.html"
 
-    @classonlymethod
-    def as_view(self, **initkwargs):
-        view = super().as_view(**initkwargs)
-        view._is_coroutine = asyncio.coroutines._is_coroutine
-        return view
 
-    @classmethod
-    async def fetch_news(cls):
+    def fetch_news(self):
         url = f'https://newsapi.org/v2/everything?q=finance&apiKey={API_KEY}'
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, ssl=False) as response:
-                result = await response.json()
-                return result['articles']
+        response = requests.get(url, headers={'Content-Type': 'application/json'})
+        result = response.json()
+        return result['articles']
 
-    async def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         context = {
-            "data": await self.fetch_news()
+            "data": self.fetch_news()
         }
         return render(request, self.template_name, context)
 
