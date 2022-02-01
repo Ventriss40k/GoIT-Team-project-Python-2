@@ -3,6 +3,7 @@ from django.utils.decorators import classonlymethod
 from django.views.generic import View, TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
 
 from django.contrib.auth.views import LoginView
@@ -13,6 +14,7 @@ from django.contrib.auth import login
 from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db import transaction
+from django.utils import timezone, dateformat
 
 from django.http import HttpResponseRedirect, HttpResponse
 from dotenv import load_dotenv
@@ -20,6 +22,7 @@ import asyncio
 import aiohttp
 import os
 from .models import Contacts, Notes, NoteTags, Files, FileTypes
+from .forms import PositionForm
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -57,7 +60,7 @@ class HomeView(TemplateView):
 
 
 class ContactsView(LoginRequiredMixin, ListView):
-    template_name = "assistant/contacts.html"
+    template_name = "assistant/contacts_list.html"
     model = Contacts
     context_object_name = 'contacts'
 
@@ -93,7 +96,7 @@ class AddContact(LoginRequiredMixin, CreateView):
     model = Contacts
     fields = ['first_name', 'last_name',
               'phone_number', 'email', 'b_day', 'is_favorite']
-    success_url = reverse_lazy('contacts')
+    success_url = reverse_lazy('contacts_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -104,7 +107,7 @@ class UpdateContact(LoginRequiredMixin, UpdateView):
     model = Contacts
     fields = ['first_name', 'last_name',
               'phone_number', 'email', 'b_day', 'is_favorite']
-    success_url = reverse_lazy('contacts')
+    success_url = reverse_lazy('contacts_list')
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -114,7 +117,7 @@ class UpdateContact(LoginRequiredMixin, UpdateView):
 class DeleteContact(LoginRequiredMixin, DeleteView):
     model = Contacts
     context_object_name = 'contacts'
-    success_url = reverse_lazy('contacts')
+    success_url = reverse_lazy('contacts_list')
 
     def get_queryset(self):
         owner = self.request.user
