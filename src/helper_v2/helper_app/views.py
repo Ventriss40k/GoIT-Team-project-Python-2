@@ -1,5 +1,5 @@
 from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.generics import ListCreateAPIView, ListAPIView
+from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView, RetrieveUpdateDestroyAPIView
 from rest_framework.permissions import AllowAny
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -124,23 +124,31 @@ class MyTemplateHTMLRenderer(TemplateHTMLRenderer):
         return {'data': data}
 
 
-class NotesView(ListCreateAPIView):
+class NotesView(ListAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
     renderer_classes = [MyTemplateHTMLRenderer]
     template_name = "assistant/notes.html"
     permission_classes = [AllowAny, ]
 
-    # def list(self, request, *args, **kwargs):
-    #     queryset = self.filter_queryset(self.get_queryset())
-    #     serializer = self.get_serializer(queryset, many=True)
-    #     data = {obj['id']: obj for obj in serializer.data}
-    #     print(serializer)
-    #     return Response({'results': serializer})
+class NotesDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    # renderer_classes = [MyTemplateHTMLRenderer]
+    # template_name = "assistant/notes.html"
+    permission_classes = [AllowAny, ]
+    lookup_field = 'pk' 
 
-    # def perform_create(self, serializer):
-    #     return serializer.save()
 
+class NotesCreateView(CreateAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    # renderer_classes = [MyTemplateHTMLRenderer]
+    # template_name = "assistant/notes.html"
+    permission_classes = [AllowAny, ]
+
+
+   
 
 class NewsView(ListAPIView):
     template_name = "assistant/news.html"

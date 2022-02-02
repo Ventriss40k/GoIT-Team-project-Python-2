@@ -10,6 +10,9 @@ urlpatterns = [
     path('', views.HomeView.as_view(), name='home'),
     path('contacts', views.ContactsView.as_view(), name='contacts'),
     path('notes', views.NotesView.as_view(), name='notes'),
+    path('note-detail/<int:pk>', views.NotesDetailView.as_view(), name='note-detail'),
+    path('notes-create', views.NotesCreateView.as_view(), name='note-create'),
+    
     path('news', views.NewsView.as_view(), name='news'),
     path('files', views.FilesView.as_view(), name='files'),
     path('aboutUs', views.AboutView.as_view(), name='aboutUs'),

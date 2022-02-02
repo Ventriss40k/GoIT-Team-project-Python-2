@@ -1,0 +1,23 @@
+{% extends 'assistant/index.html' %} {% block content %}
+
+<div>
+  <div>
+    {% if data %}
+    <div>
+      {% for note in data %}
+      <p>{{note.title}}</p>
+      <span>
+        
+          <a class="delete-link" href="{% url 'note-detail' note.id %}">&#215;</a>
+          
+        </div>
+      </span>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div>
+    <h3>not notes</h3>
+  </div>
+</div>
+{%endif%} {% endblock %}
