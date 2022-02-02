@@ -77,7 +77,7 @@ class ContactsView(LoginRequiredMixin, ListView):
         first_name_input = self.request.GET.get('search-by-name') or ''
         if first_name_input:
             context['contacts'] = context['contacts'].filter(
-                first_name=first_name_input)
+                first_name__istartswith=first_name_input)
 
         last_name_input = self.request.GET.get('search-by-last-name') or ''
         if last_name_input:
@@ -94,23 +94,6 @@ class ContactsView(LoginRequiredMixin, ListView):
             context['contacts'] = context['contacts'].filter(
                 email=email_input)
         return context
-
-
-# visible_projects = project.expenses.filter(dateExpense__gte=dates[0]).filter(
-#     dateExpense__lte=dates[1]) if dates else project.expenses.all()
-
-
-# def find_birthday(colleagues):
-#     next_week = []
-#     current_time = datetime.datetime.now().date()
-#     start_of_period = current_time - \
-#         datetime.timedelta(days=current_time.weekday() - 5)
-#     end_of_period = start_of_period + datetime.timedelta(days=6)
-#     for item in colleagues:
-#         for i, val in item.items():
-#             if end_of_period.strftime('%m-%d') >= val.strftime('%m-%d') >= start_of_period.strftime('%m-%d'):
-#                 next_week.append(item)
-#     return next_week
 
 
 class AddContact(LoginRequiredMixin, CreateView):
