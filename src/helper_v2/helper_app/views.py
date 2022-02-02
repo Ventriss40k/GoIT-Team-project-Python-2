@@ -1,20 +1,15 @@
 from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.generics import ListCreateAPIView, ListAPIView
 from rest_framework.permissions import AllowAny
-from django.utils.decorators import classonlymethod
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView, FormView
-
 from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-
-from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
-from django.db import transaction
 
 from rest_framework.response import Response
 from dotenv import load_dotenv
@@ -126,8 +121,7 @@ class NotesView(ListCreateAPIView):
     serializer_class = NoteSerializer
     renderer_classes = [TemplateHTMLRenderer]
     template_name = "assistant/notes.html"
-    permission_classes = [AllowAny,]
-
+    permission_classes = [AllowAny, ]
 
     def list(self, request, *args, **kwargs):
         queryset = self.filter_queryset(self.get_queryset())
@@ -135,17 +129,15 @@ class NotesView(ListCreateAPIView):
         data = {obj['id']: obj for obj in serializer.data}
         return Response({'results': data})
 
-
     def perform_create(self, serializer):
         return serializer.save()
-
 
 
 class NewsView(ListAPIView):
     template_name = "assistant/news.html"
 
-
-    def fetch_news(self):
+    @classmethod
+    def fetch_news(cls):
         url = f'https://newsapi.org/v2/everything?q=finance&apiKey={API_KEY}'
         response = requests.get(url, headers={'Content-Type': 'application/json'})
         result = response.json()
@@ -164,4 +156,3 @@ class AboutView(TemplateView):
 
 class FilesView(TemplateView):
     template_name = "assistant/files.html"
-

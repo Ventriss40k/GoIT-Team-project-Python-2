@@ -1,0 +1,23 @@
+<div class="modal-content">
+      <h4>Add Note</h4>
+      <form method="post">
+        {% csrf_token %} {{form.as_p}}
+        <label for="title"
+          >Title
+          <input name="title" id="title" autocomplete="off" style="height: 2rem" />
+        </label>
+
+        <label for="description"
+          >Description
+          <input name="description" id="description" autocomplete="off" style="height: 2rem" />
+        </label>
+        <label for="tagInput">
+          Tags(press enter after every tag)
+          <input type="text" name="tagInput" id="tagInput" />
+          <input type="hidden" name="tagsString" />
+        </label>
+
+        <ul id="tagsContainer" class="tags-container"></ul>
+        <button type="submit" class="btn">Add</button>
+      </form>
+    </div>
