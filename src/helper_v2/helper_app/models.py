@@ -5,7 +5,7 @@ from django.utils.timezone import now
 
 class Contacts(models.Model):
     user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=False, blank=False,)
+        User, on_delete=models.CASCADE, null=False, blank=False, )
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=200)
     phone_number = models.CharField(max_length=100)
@@ -23,7 +23,6 @@ class Note(models.Model):
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.CharField(max_length=300)
     tagsString = models.CharField(max_length=300, default='null')
-
 
     def __str__(self):
         return f'{self.title}'

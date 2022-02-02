@@ -116,21 +116,30 @@ class DeleteContact(LoginRequiredMixin, DeleteView):
         return self.model.objects.filter(user=owner)
 
 
+class MyTemplateHTMLRenderer(TemplateHTMLRenderer):
+    def get_template_context(self, data, renderer_context):
+        response = renderer_context['response']
+        if response.exception:
+            data['status_code'] = response.status_code
+        return {'data': data}
+
+
 class NotesView(ListCreateAPIView):
     queryset = Note.objects.all()
     serializer_class = NoteSerializer
-    renderer_classes = [TemplateHTMLRenderer]
+    renderer_classes = [MyTemplateHTMLRenderer]
     template_name = "assistant/notes.html"
     permission_classes = [AllowAny, ]
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
-        serializer = self.get_serializer(queryset, many=True)
-        data = {obj['id']: obj for obj in serializer.data}
-        return Response({'results': data})
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     data = {obj['id']: obj for obj in serializer.data}
+    #     print(serializer)
+    #     return Response({'results': serializer})
 
-    def perform_create(self, serializer):
-        return serializer.save()
+    # def perform_create(self, serializer):
+    #     return serializer.save()
 
 
 class NewsView(ListAPIView):
