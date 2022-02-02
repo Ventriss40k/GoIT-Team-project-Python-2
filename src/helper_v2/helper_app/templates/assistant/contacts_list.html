@@ -28,19 +28,20 @@
     <br>
     <br>
     <div id="Contacts">
-    
+      
       {% for contact in contacts %}
       <a style="text-decoration-line: underline;" href="{% url 'contact-update' contact.id  %}">{{contact}}</a>
       <div class="contact-controls">
         <a class="delete-link" href="{% url 'contact-delete' contact.id %}"
-          style="font-size: x-small; margin-left: 50; text-decoration-color: brown;">&#215; click to delete </a>
+        style="font-size: x-small; margin-left: 50; text-decoration-color: brown;">&#215; click to delete </a>
         <!-- <span class="handle">&nbsp;&#10247;</span> -->
       </div>
       {% endfor %}
     </div>
-  
+    
   </div>
-
+ 
+  
 </div>
 <div id="contactModal" class="modal">
   <div class="modal-content">
@@ -85,7 +86,13 @@
     </form>
   </div>
 </div>
-    {{get_birthdays}} 00000000000
+
+<div class="container"> 
+  <h6>Your contacts with birthdays this mounth:</h6>
+  {% for b_day in b_days %}
+  <p>    {{b_day}}   </p>
+  {% endfor %}
+</div>
 <script>
   let elem = document.querySelector('.modal');
   let instance = M.Modal.init(elem);
