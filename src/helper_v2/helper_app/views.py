@@ -71,8 +71,10 @@ class ContactsView(LoginRequiredMixin, ListView):
             user=self.request.user)
         context['count'] = context['contacts'].count()
 
-        first_name_input = self.request.GET.get('search-by-name') or ''
+        context['b_days'] = context['contacts'].filter(
+            b_day__month=timezone.datetime.now().month)
 
+        first_name_input = self.request.GET.get('search-by-name') or ''
         if first_name_input:
             context['contacts'] = context['contacts'].filter(
                 first_name=first_name_input)
@@ -93,13 +95,22 @@ class ContactsView(LoginRequiredMixin, ListView):
                 email=email_input)
         return context
 
-        def get_birthdays(self, **kwargs):
-            birthdays = []
-            context = super().get_context_data(**kwargs)
-            context['contacts'] = context['contacts'].filter(
-                user=self.request.user).filter(b_day < timezone.datetime.now().date())
-            print(context)
-            return "context['contacts']"
+
+# visible_projects = project.expenses.filter(dateExpense__gte=dates[0]).filter(
+#     dateExpense__lte=dates[1]) if dates else project.expenses.all()
+
+
+# def find_birthday(colleagues):
+#     next_week = []
+#     current_time = datetime.datetime.now().date()
+#     start_of_period = current_time - \
+#         datetime.timedelta(days=current_time.weekday() - 5)
+#     end_of_period = start_of_period + datetime.timedelta(days=6)
+#     for item in colleagues:
+#         for i, val in item.items():
+#             if end_of_period.strftime('%m-%d') >= val.strftime('%m-%d') >= start_of_period.strftime('%m-%d'):
+#                 next_week.append(item)
+#     return next_week
 
 
 class AddContact(LoginRequiredMixin, CreateView):
