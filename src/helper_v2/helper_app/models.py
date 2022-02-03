@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.timezone import now
+from django.core.validators import RegexValidator
 
 
 class Contacts(models.Model):
@@ -8,7 +9,9 @@ class Contacts(models.Model):
         User, on_delete=models.CASCADE, null=False, blank=False,)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=200)
-    phone_number = models.CharField(max_length=100)
+    phone_regex = RegexValidator(
+        regex=r'^\+?1?\d{9,15}$', message=("Phone number must be entered in the format:'+99999999'. Up to 15 digits allowed."))
+    phone_number = models.CharField(validators=[phone_regex], max_length=100)
     email = models.EmailField(max_length=50)
     b_day = models.DateField(default=now().date(), null=True)
     is_favorite = models.BooleanField(default=False)
