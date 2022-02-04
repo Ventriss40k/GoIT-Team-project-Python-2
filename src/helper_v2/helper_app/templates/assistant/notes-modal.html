@@ -1,6 +1,6 @@
 <div class="modal-content">
   <h4>Add Note</h4>
-  <form method="post">
+  <form method="post" action="{% url 'note-create' %}">
     {% csrf_token %} {{form.as_p}}
     <label for="title"
       >Title

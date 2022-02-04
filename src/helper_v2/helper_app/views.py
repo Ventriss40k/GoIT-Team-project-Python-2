@@ -1,6 +1,4 @@
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.generics import ListAPIView, CreateAPIView, RetrieveAPIView, RetrieveUpdateAPIView, RetrieveDestroyAPIView, RetrieveUpdateDestroyAPIView
-from rest_framework.permissions import AllowAny
+from django.views.generic.detail import DetailView
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
@@ -9,14 +7,13 @@ from django.contrib.auth.views import LoginView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
-from django.shortcuts import redirect, render, get_object_or_404
-
-from rest_framework.response import Response
+from django.shortcuts import redirect, render
 from dotenv import load_dotenv
 import requests
 import os
+
 from .models import Contacts, Note, Files, FileTypes
-from .serializer import NoteSerializer
+
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -116,41 +113,64 @@ class DeleteContact(LoginRequiredMixin, DeleteView):
         return self.model.objects.filter(user=owner)
 
 
-class MyTemplateHTMLRenderer(TemplateHTMLRenderer):
-    def get_template_context(self, data, renderer_context):
-        response = renderer_context['response']
-        if response.exception:
-            data['status_code'] = response.status_code
-        return {'data': data}
+class NotesListView(LoginRequiredMixin, ListView):
+    model = Note
+    context_object_name = "notes"
+    template_name = 'assistant/notes_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['notes'] = context['notes'].filter(user=self.request.user)
+        
+        search_input_title = self.request.GET.get('search_title') or ''
+        if search_input_title:
+            context['notes'] = context['notes'].filter(
+                title__istartswith=search_input_title)
+
+        context['search_input_title'] = search_input_title 
+        return context  
 
 
-class NotesView(ListAPIView):
-    queryset = Note.objects.all()
-    serializer_class = NoteSerializer
-    renderer_classes = [MyTemplateHTMLRenderer]
-    template_name = "assistant/notes.html"
-    permission_classes = [AllowAny, ]
 
-class NotesDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Note.objects.all()
-    serializer_class = NoteSerializer
-    # renderer_classes = [MyTemplateHTMLRenderer]
-    # template_name = "assistant/notes.html"
-    permission_classes = [AllowAny, ]
-    lookup_field = 'pk' 
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    model = Note 
+    context_object_name = "note"
+    template_name = 'assistant/note.html'
 
 
-class NotesCreateView(CreateAPIView):
-    queryset = Note.objects.all()
-    serializer_class = NoteSerializer
-    # renderer_classes = [MyTemplateHTMLRenderer]
-    # template_name = "assistant/notes.html"
-    permission_classes = [AllowAny, ]
 
 
-   
+class NoteCreateView(LoginRequiredMixin, CreateView):
+    model = Note
+    fields = ['title', 'description', 'tagsString']
+    success_url = reverse_lazy('notes')
 
-class NewsView(ListAPIView):
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(NoteCreateView, self).form_valid(form)
+
+
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Note
+    fields = ['title', 'description', 'tagsString']
+    success_url = reverse_lazy('notes')
+    template_name = 'assistant/note_form.html'
+
+
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
+    model = Note
+    context_object_name = "note"
+    template_name = 'assistant/note_confirm_delete.html'
+    success_url = reverse_lazy('notes')
+    
+
+    def get_queryset(self):
+        owner = self.request.user
+        return self.model.objects.filter(user=owner)
+
+
+
+class NewsView(ListView):
     template_name = "assistant/news.html"
 
     @classmethod

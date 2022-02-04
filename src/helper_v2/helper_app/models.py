@@ -18,8 +18,8 @@ class Contacts(models.Model):
 
 
 class Note(models.Model):
-    # user = models.ForeignKey(
-    #     User, on_delete=models.CASCADE, null=False, blank=False, )
+    user = models.ForeignKey(
+        User, on_delete=models.CASCADE, null=False, blank=False, )
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.CharField(max_length=300)
     tagsString = models.CharField(max_length=300, default='null')
