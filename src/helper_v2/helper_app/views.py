@@ -1,6 +1,4 @@
-from django import conf
-from django.utils.decorators import classonlymethod
-from django.views.generic import View, TemplateView
+from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
 from django.views.generic.detail import DetailView
@@ -15,14 +13,10 @@ from django.views import View
 from django.shortcuts import redirect, render, get_object_or_404
 from django.db import transaction
 from django.utils import timezone, dateformat
-
-from django.http import HttpResponseRedirect, HttpResponse
 from dotenv import load_dotenv
-import asyncio
-import aiohttp
+import requests
 import os
-from .models import Contacts, Notes, NoteTags, Files, FileTypes
-from .forms import PositionForm
+from .models import Contacts, Note, Files, FileTypes
 
 
 load_dotenv()
@@ -128,30 +122,76 @@ class DeleteContact(LoginRequiredMixin, DeleteView):
         return self.model.objects.filter(user=owner)
 
 
-class NotesView(TemplateView):
-    template_name = "assistant/notes.html"
+class NotesListView(LoginRequiredMixin, ListView):
+    model = Note
+    context_object_name = "notes"
+    template_name = 'assistant/notes_list.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['notes'] = context['notes'].filter(user=self.request.user)
+        
+        search_input_title = self.request.GET.get('search_title') or ''
+        if search_input_title:
+            context['notes'] = context['notes'].filter(
+                title__istartswith=search_input_title)
+
+        context['search_input_title'] = search_input_title 
+        return context  
 
 
-class NewsView(View):
+
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    model = Note 
+    context_object_name = "note"
+    template_name = 'assistant/note.html'
+
+
+
+
+class NoteCreateView(LoginRequiredMixin, CreateView):
+    model = Note
+    fields = ['title', 'description', 'tagsString']
+    success_url = reverse_lazy('notes')
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super(NoteCreateView, self).form_valid(form)
+
+
+class NoteUpdateView(LoginRequiredMixin, UpdateView):
+    model = Note
+    fields = ['title', 'description', 'tagsString']
+    success_url = reverse_lazy('notes')
+    template_name = 'assistant/note_form.html'
+
+
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
+    model = Note
+    context_object_name = "note"
+    template_name = 'assistant/note_confirm_delete.html'
+    success_url = reverse_lazy('notes')
+    
+
+    def get_queryset(self):
+        owner = self.request.user
+        return self.model.objects.filter(user=owner)
+
+
+
+class NewsView(ListView):
     template_name = "assistant/news.html"
 
-    @classonlymethod
-    def as_view(self, **initkwargs):
-        view = super().as_view(**initkwargs)
-        view._is_coroutine = asyncio.coroutines._is_coroutine
-        return view
-
     @classmethod
-    async def fetch_news(cls):
+    def fetch_news(cls):
         url = f'https://newsapi.org/v2/everything?q=finance&apiKey={API_KEY}'
-        async with aiohttp.ClientSession() as session:
-            async with session.get(url, ssl=False) as response:
-                result = await response.json()
-                return result['articles']
+        response = requests.get(url, headers={'Content-Type': 'application/json'})
+        result = response.json()
+        return result['articles']
 
-    async def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         context = {
-            "data": await self.fetch_news()
+            "data": self.fetch_news()
         }
         return render(request, self.template_name, context)
 
