@@ -153,6 +153,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     fields = ['title', 'description', 'tagsString']
     success_url = reverse_lazy('notes')
+    template_name = 'assistant/note_form.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user

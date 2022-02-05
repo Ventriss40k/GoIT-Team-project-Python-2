@@ -13,7 +13,7 @@
 </nav>
 
 <div>
-  <h1>Hello {{request.user|title}}</h1>
+  <h1>Hello, {{request.user|title}}</h1>
 
   {% if request.user.is_authenticated %}
   <a href="{% url 'logout' %}">Logout</a> {% else %} <a href="{% url 'login' %}">Login</a>
