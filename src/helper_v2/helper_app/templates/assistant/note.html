@@ -1,0 +1,9 @@
+<div class="">
+  <a href="{% url 'notes' %}">&#8592; Back</a>
+</div>
+
+<ul>
+  <li style="list-style: none">Title: {{note.title}}</li>
+  <li style="list-style: none">Description: {{note.description}}</li>
+  <li style="list-style: none">Tags: {{note.tagsString}}</li>
+</ul>

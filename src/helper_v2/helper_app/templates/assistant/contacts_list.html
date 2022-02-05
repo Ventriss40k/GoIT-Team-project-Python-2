@@ -1,0 +1,101 @@
+{% extends 'assistant/index.html' %} {% block content %}
+<nav>
+  <div class="blue nav-wrapper">
+    <a href="/" class="brand-logo center">Assistant</a>
+    <ul class="left hide-on-med-and-down">
+      <li class="active"><a class="active" href="/contacts_list">Contacts</a></li>
+      <li><a href="/notes">Notes</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="/aboutUs">About Us</a></li>
+    </ul>
+  </div>
+</nav>
+<div class="container">
+  <h1>hello, this is contacts page</h1>
+
+  <div id="search-add-wrapper">
+    <form method="GET" >
+  
+      <input type='text' name='search-by-name' placeholder="Search by name"  style="width: 200pt;" >        
+      <input class="button" type="submit" value='Search'>      
+      
+    </form>
+    
+    <button class="btn waves-effect left modal-trigger" href="#contactModal">
+      <i class="material-icons white-text left">add_circle_outline</i>
+      Add
+    </button> 
+    <br>
+    <br>
+    <div id="Contacts">
+      
+      {% for contact in contacts %}
+      <a style="text-decoration-line: underline;" href="{% url 'contact-update' contact.id  %}">{{contact}}</a>
+      <div class="contact-controls">
+        <a class="delete-link" href="{% url 'contact-delete' contact.id %}"
+        style="font-size: x-small; margin-left: 50; text-decoration-color: brown;">&#215; click to delete </a>
+        <!-- <span class="handle">&nbsp;&#10247;</span> -->
+      </div>
+      {% endfor %}
+    </div>
+    
+  </div>
+ 
+  
+</div>
+<div id="contactModal" class="modal">
+  <div class="modal-content">
+    <h4>Add Contact</h4>
+    <form method="POST" action="{% url 'contact-add' %}">
+      {% csrf_token %} 
+      {{form.as_p}}
+      
+      <label for="first_name"
+        >First name
+        <input name="first_name" id="first_name" autocomplete="off" style="height: 2rem" />
+      </label>
+
+      <label for="last_name"
+        >Last name
+        <input name="last_name" id="lastName" autocomplete="off" style="height: 2rem" />
+      </label>
+
+      <label for="phone_number"
+        >Phone
+        <input type="tel" name="phone_number" id="phone_number" autocomplete="off" style="height: 2rem" />
+      </label>
+
+      <label for="email"
+        >Email
+        <input type="email" name="email" id="email" autocomplete="off" style="height: 2rem" />
+      </label>
+
+      <label for="b_day"
+        >Birthday:
+        <input
+          type="date"
+          id="b_day"
+          name="b_day"
+          style="height: 2rem"
+          value=""
+          min=""
+          max=""
+        />
+      </label>
+      <input type="submit" class="button" value="Submit">
+    </form>
+  </div>
+</div>
+
+<div class="container"> 
+  <h6>Your contacts with birthdays this mounth:</h6>
+  {% for b_day in b_days %}
+  <p>    {{b_day}}   </p>
+  {% endfor %}
+</div>
+<script>
+  let elem = document.querySelector('.modal');
+  let instance = M.Modal.init(elem);
+</script>
+
+{% endblock %}

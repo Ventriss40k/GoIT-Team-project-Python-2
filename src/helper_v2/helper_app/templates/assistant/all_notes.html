@@ -1,0 +1,28 @@
+<table class="highlight" style="max-width: 600px">
+  <tbody>
+    {% for note in notes %}
+    <tr>
+      <td>{{note.title}}</td>
+      <td class="right">
+        <a href="{% url 'note-update' note.id %}">
+          <button class="btn waves-effect">update</button>
+        </a>
+      </td>
+      <td class="right">
+        <a class="" href="{% url 'note-delete' note.id %}"
+          ><button class="btn waves-effect">delete</button></a
+        >
+      </td>
+      <td class="right">
+        <a class="" href="{% url 'note' note.id %}"
+          ><button class="btn waves-effect">detail</button></a
+        >
+      </td>
+    </tr>
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em">
+      <h3>No new tasks are created.</h3>
+    </div>
+    {% endfor %}
+  </tbody>
+</table>
