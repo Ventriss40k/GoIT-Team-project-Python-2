@@ -1,14 +1,15 @@
 (function () {
   tags = document.querySelector('#tagInput');
-  if (tags == null) {
-    return;
-  }
 
   tags.addEventListener('keydown', tagInput);
 
   function tagInput(e) {
     if (e.keyCode != 13) {
       return;
+    }
+
+    if (!tags.value) {
+      alert('Field is empty');
     }
 
     e.preventDefault();
@@ -21,7 +22,7 @@
 
   function addNewTag(name) {
     let tagsContainer = document.querySelector('#tagsContainer');
-    if (name == ' ') {
+    if (name == '' || name == ' ') {
       return;
     }
     let tagsMarkup = `

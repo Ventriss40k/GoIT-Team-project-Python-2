@@ -1,0 +1,58 @@
+{% extends 'assistant/index.html' %} {% block content %}
+<nav>
+  <div class="blue nav-wrapper">
+    <a href="/" class="brand-logo center">Assistant</a>
+    <ul class="left hide-on-med-and-down">
+      <li><a href="/contacts_list">Contacts</a></li>
+      <li class="active"><a href="/notes">Notes</a></li>
+      <li><a href="/news">News</a></li>
+      <li><a href="/files">Files</a></li>
+      <li><a href="/aboutUs">About Us</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div>
+  <h1>Hello {{request.user|title}}</h1>
+
+  {% if request.user.is_authenticated %}
+  <a href="{% url 'logout' %}">Logout</a> {% else %} <a href="{% url 'login' %}">Login</a>
+  {% endif %}
+</div>
+
+<div class="container">
+  <div class="row">
+    <h1>hello, this is notes page</h1>
+
+    <form class="col s12" style="padding: 0">
+      <div class="">
+        <div class="col s12">
+          Search your note:
+          <div class="input-field inline">
+            <input id="email_inline" type="text" name="search_title" />
+            <label for="email_inline">Title</label>
+          </div>
+        </div>
+      </div>
+    </form>
+    <button
+      class="btn waves-effect left modal-trigger col s12"
+      href="#noteModal"
+      style="max-width: 100px; margin-bottom: 50px"
+    >
+      <i class="material-icons white-text left">add_circle_outline</i>
+      Add
+    </button>
+    <div id="noteModal" class="modal">{% include "assistant/notes-modal.html" %}</div>
+
+    <div id="noteslist" class="col s12" style="padding: 0">
+      {% include "assistant/all_notes.html" %}
+    </div>
+  </div>
+</div>
+
+<script>
+  let elem = document.querySelector('.modal');
+  let instance = M.Modal.init(elem);
+</script>
+{% endblock %}
