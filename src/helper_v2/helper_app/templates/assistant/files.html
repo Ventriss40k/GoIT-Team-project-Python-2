@@ -12,7 +12,71 @@
   </div>
 </nav>
 <div class="container">
-  <h1>hello, this is page for upload files</h1>
+  <h1>Hello! Here you can manage your files</h1>
+  <!-- <h3>{{list_of_files}}</h3> -->
 </div>
+<h3>This is list of all your files</h3>
+<table>
+  <tr>
+    <th style="background-color: rgb(89, 116, 186)">File name</th>
+    <th style="background-color: rgb(89, 116, 186)">File type</th>
+      <form action="
+      {% url 'files' %}" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      
+        <label for="file">Choose file to upload</label>
+        <input type="file" name="file">
+        <input type="hidden" name="operation" value="upload">
+        <button type= "submit">Upload</button>
+        </form>
+  </tr>
+  {% for file in list_of_files %}
+  <tr>
+    <td>{{file.name}}</td>
+    <td >{{file.mimeType}}</td>
+    <td><form action="
+      {% url 'files' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="file_name" value={{ file.name }}>
+      <input type="hidden" name="file_id" value={{ file.id }}>
+      <input type="hidden" name="operation" value="download">
+      <input type="submit" value="Download"> </form>   </td>
+
+    <td><form action="
+      {% url 'files' %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="file_name" value={{ file.name }}>
+      <input type="hidden" name="file_id" value={{ file.id }}>
+      <input type="hidden" name="operation" value="delete">
+      <input type="submit" value="Delete"> </form>   </td> 
+
+  </tr>
+  {% endfor %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <!-- <tr>
+    <td>Calcutta</td>
+    <td style="background-color: yellow">Orange</td>
+  </tr>
+  <tr>
+    <td>Robots</td>
+    <td style="background-color: yellow">Jazz</td>
+  </tr>
+</table> -->
 
 {% endblock %}
