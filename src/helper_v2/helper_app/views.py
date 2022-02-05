@@ -137,6 +137,17 @@ class NotesListView(LoginRequiredMixin, ListView):
                 title__istartswith=search_input_title)
 
         context['search_input_title'] = search_input_title 
+
+
+        search_input_tag = self.request.GET.get('search_tag') or ''
+        if search_input_tag:
+            context['notes'] = context['notes'].filter(
+                tagsString__contains=search_input_tag)
+
+        context['search_input_tag'] = search_input_tag 
+
+
+        
         return context  
 
 
@@ -185,7 +196,7 @@ class NewsView(ListView):
 
     @classmethod
     def fetch_news(cls):
-        url = f'https://newsapi.org/v2/everything?q=finance&apiKey={API_KEY}'
+        url = f'https://newsapi.org/v2/top-headlines?country=ua&apiKey={API_KEY}'
         response = requests.get(url, headers={'Content-Type': 'application/json'})
         result = response.json()
         return result['articles']

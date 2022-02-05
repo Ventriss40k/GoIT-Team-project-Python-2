@@ -1,27 +1,33 @@
-<table class="highlight" style="max-width: 600px">
+<table class="highlight">
   <tbody>
     {% for note in notes %}
     <tr>
-      <td>{{note.title}}</td>
+      <td style="font-size: 20px; color: black; font-family: 'Rowdies', cursive">{{note.title}}</td>
       <td class="right">
-        <a href="{% url 'note-update' note.id %}">
-          <button class="btn waves-effect">update</button>
+        <a href="{% url 'note-delete' note.id %}">
+          <button class="btn waves-effect red">
+            <i class="material-icons">delete</i>
+          </button>
         </a>
       </td>
       <td class="right">
-        <a class="" href="{% url 'note-delete' note.id %}"
-          ><button class="btn waves-effect">delete</button></a
-        >
+        <a class="" href="{% url 'note-update' note.id %}"
+          ><button class="btn waves-effect">
+            <i class="material-icons">create</i>
+          </button>
+        </a>
       </td>
       <td class="right">
         <a class="" href="{% url 'note' note.id %}"
-          ><button class="btn waves-effect">detail</button></a
-        >
+          ><button class="btn waves-effect">
+            <i class="material-icons">description</i>
+          </button>
+        </a>
       </td>
     </tr>
     {% empty %}
     <div style="text-align: center; padding-bottom: 10px; line-height: 1em">
-      <h3>No new tasks had created.</h3>
+      <h3>You don't have some notes.</h3>
     </div>
     {% endfor %}
   </tbody>
