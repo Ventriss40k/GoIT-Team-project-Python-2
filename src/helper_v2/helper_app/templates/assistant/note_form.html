@@ -1,14 +1,28 @@
 {% extends 'assistant/index.html' %} {% block content %}
-
-<div class="">
-  <a href="{% url 'notes' %}">&#8592; Back</a>
-</div>
-
-<div class="">
-  <form method="POST" action="">
-    {% csrf_token %} {{form.as_p}}
-    <input class="button" type="submit" value="Submit" />
-  </form>
+<a href="{% url 'notes' %}" style="font-weight: bold"
+  ><i class="material-icons teal-text left large">arrow_back</i></a
+>
+<div class="container">
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <form method="POST" action="">
+              {% csrf_token %} {{form.as_p}}
+              <button
+                class="btn waves-effect left col s12"
+                href="#noteModal"
+                style="max-width: 100px; margin-bottom: 50px"
+              >
+                update
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

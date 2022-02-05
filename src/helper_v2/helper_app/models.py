@@ -26,7 +26,7 @@ class Note(models.Model):
         User, on_delete=models.CASCADE, null=False, blank=False, )
     title = models.CharField(max_length=100, null=False, blank=False)
     description = models.CharField(max_length=300)
-    tagsString = models.CharField(max_length=300, default='null')
+    tagsString = models.CharField(max_length=300)
 
     def __str__(self):
         return f'{self.title}'

@@ -1,8 +1,29 @@
 {% extends 'assistant/index.html' %} {% block content %}
-<nav>
-  <div class="blue nav-wrapper">
-    <a href="/" class="brand-logo center">Assistant</a>
-    <ul class="left hide-on-med-and-down">
+
+<nav class="blue nav-extended">
+  <div class="nav-wrapper">
+    <a href="/" class="brand-logo">Assistant</a>
+    <ul
+      id="nav-mobile"
+      class="right hide-on-med-and-down"
+      style="display: flex; align-items: center"
+    >
+      <li>
+        {% if request.user.is_authenticated %}
+        <p>Hello, {{request.user|title}}</p>
+        {% endif %}
+      </li>
+      <li>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="btn waves-effect" style="background-color: #3cb371">
+          <i class="material-icons">exit_to_app</i>
+        </a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  <div class="nav-content">
+    <ul class="tabs tabs-transparent">
       <li><a href="/contacts_list">Contacts</a></li>
       <li class="active"><a href="/notes">Notes</a></li>
       <li><a href="/news">News</a></li>
@@ -11,42 +32,42 @@
     </ul>
   </div>
 </nav>
-
-<div>
-  <h1>Hello {{request.user|title}}</h1>
-
-  {% if request.user.is_authenticated %}
-  <a href="{% url 'logout' %}">Logout</a> {% else %} <a href="{% url 'login' %}">Login</a>
-  {% endif %}
-</div>
-
 <div class="container">
   <div class="row">
-    <h1>hello, this is notes page</h1>
-
+    <p>search you note</p>
     <form class="col s12" style="padding: 0">
       <div class="">
         <div class="col s12">
-          Search your note:
           <div class="input-field inline">
-            <input id="email_inline" type="text" name="search_title" />
+            <input id="email_inline" type="text" name="search_title" autocomplete="off" />
             <label for="email_inline">Title</label>
           </div>
         </div>
       </div>
     </form>
-    <button
-      class="btn waves-effect left modal-trigger col s12"
-      href="#noteModal"
-      style="max-width: 100px; margin-bottom: 50px"
-    >
-      <i class="material-icons white-text left">add_circle_outline</i>
-      Add
-    </button>
+    <form class="col s12" style="padding: 0">
+      <div class="">
+        <div class="col s12">
+          <div class="input-field inline">
+            <input id="email_inline" type="text" name="search_tag" autocomplete="off" />
+            <label for="email_inline">Tag </label>
+          </div>
+        </div>
+      </div>
+    </form>
     <div id="noteModal" class="modal">{% include "assistant/notes-modal.html" %}</div>
 
-    <div id="noteslist" class="col s12" style="padding: 0">
+    <div>
       {% include "assistant/all_notes.html" %}
+      <button
+        class="btn waves-effect right modal-trigger"
+        style="margin-top: 20px"
+        href="#noteModal"
+        style="max-width: 100px; margin-bottom: 50px"
+      >
+        <i class="material-icons white-text left">add_circle_outline</i>
+        Add new note
+      </button>
     </div>
   </div>
 </div>
