@@ -1,3 +1,4 @@
+from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
 from django.views.generic.list import ListView
@@ -17,6 +18,15 @@ from dotenv import load_dotenv
 import requests
 import os
 from .models import Contacts, Note, Files, FileTypes
+
+from google.oauth2 import service_account # for authorization
+from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload # for downloading| uploading files
+from googleapiclient.discovery import build # allows creating a resorce for easy acess to API
+import io
+from django.core.files.storage import FileSystemStorage
+from helper_v2.settings import MEDIA_ROOT 
+from django.contrib.auth.models import User
+
 
 
 load_dotenv()
@@ -213,4 +223,66 @@ class AboutView(TemplateView):
 
 
 class FilesView(TemplateView):
+    # AUTHORIZATION GOOGLE API
+    SCOPES = ['https://www.googleapis.com/auth/drive'] # is a list of features for this exact service. can get one from Google drive docs
+    SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json' # This is path to json file vith keys from service account
+    credentials = service_account.Credentials.from_service_account_file(
+            SERVICE_ACCOUNT_FILE, scopes=SCOPES) # credentials is user data, to grant him permission of doing smth
+    service = build('drive', 'v3', credentials=credentials) # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
+
+    #GET LIST OF ALL FILES 
+    results = service.files().list(pageSize=10,
+                                fields="nextPageToken, files(id, name, mimeType)").execute()
+    nextPageToken = results.get('nextPageToken')
+    while nextPageToken:
+            nextPage = service.files().list(pageSize=10,
+                                            fields="nextPageToken, files(id, name, mimeType, parents)",
+                                            pageToken=nextPageToken).execute()
+            nextPageToken = nextPage.get('nextPageToken')
+            results['files'] = results['files'] + nextPage['files']
+    list_of_files = results['files']
+    
     template_name = "assistant/files.html"
+
+    def get_context_data(self, list_of_files= list_of_files, **kwargs):
+        context = super(FilesView, self).get_context_data(**kwargs)
+        context['list_of_files'] = list_of_files
+        return context
+    def post(self, request, service= service, *args, **kwargs ):
+        # DELETE
+        if request.POST["operation"] == 'delete':
+            service.files().delete(fileId= request.POST['file_id']).execute()
+
+            return HttpResponse("deleted file") 
+        # DOWNLOAD
+        elif request.POST["operation"] == 'download':
+            file_id = request.POST['file_id']
+            googleapirequest = service.files().get_media(fileId=file_id)
+            filepath = f'C:\\Users\\1\\Desktop\\googleapi-files\\downloaded\\'+  request.POST['file_name'] # warning
+            fh = io.FileIO(filepath, 'wb')
+            downloader = MediaIoBaseDownload(fh, googleapirequest)
+            done = False
+            while done is False:
+                done = downloader.next_chunk()
+            return HttpResponse("downloaded file")
+            # UPLOAD
+        elif request.POST["operation"] == 'upload':
+            uploaded_file = request.FILES['file']
+            filename= uploaded_file.name
+            fileextension = filename.split('.')[1].lower()
+            fs = FileSystemStorage()
+            fs.save(filename,uploaded_file)
+            filepath = os.path.join(MEDIA_ROOT,filename) # creating filepath to local saved file
+
+            folder_id = '1B-2uKukREH15gK5sHqW0Iif5lT_zRqiq' # folder id, can be acuired from url or from "list" method 
+            file_metadata = {
+                            'name': filename,
+                            'parents': [folder_id]
+                        }
+            media = MediaFileUpload(filepath, resumable=True)
+            googlefile = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            return HttpResponse("upload file")
+
+
+        else:
+            return HttpResponse('invalid operation')

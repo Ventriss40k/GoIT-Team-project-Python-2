@@ -121,8 +121,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATICFILES_DIRS = [os.path.join(BASE_DIR,'helper_v2/static/' )] # - added
+MEDIA_ROOT = os.path.join(BASE_DIR,'media') # - added  
+MEDIA_URL = '/media/' # - added  
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# DEFAULT_AUTO_FIELD = 'media' # is it correct?
