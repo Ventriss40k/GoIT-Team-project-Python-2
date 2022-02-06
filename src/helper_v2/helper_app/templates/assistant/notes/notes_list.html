@@ -32,15 +32,14 @@
     </ul>
   </div>
 </nav>
-<div class="container">
-  <div class="row">
-    <p>search you note</p>
+<div style="display: flex; padding: 15px">
+  <div>
     <form class="col s12" style="padding: 0">
       <div class="">
         <div class="col s12">
           <div class="input-field inline">
             <input id="email_inline" type="text" name="search_title" autocomplete="off" />
-            <label for="email_inline">Title</label>
+            <label for="email_inline">Search by title</label>
           </div>
         </div>
       </div>
@@ -50,24 +49,27 @@
         <div class="col s12">
           <div class="input-field inline">
             <input id="email_inline" type="text" name="search_tag" autocomplete="off" />
-            <label for="email_inline">Tag </label>
+            <label for="email_inline">Search by tag </label>
           </div>
         </div>
       </div>
     </form>
-    <div id="noteModal" class="modal">{% include "assistant/notes-modal.html" %}</div>
+  </div>
+  <div class="container" style="padding: 15px">
+    <div class="row">
+      <div id="noteModal" class="modal">{% include "assistant/notes/notes-modal.html" %}</div>
 
-    <div>
-      {% include "assistant/all_notes.html" %}
-      <button
-        class="btn waves-effect right modal-trigger"
-        style="margin-top: 20px"
-        href="#noteModal"
-        style="max-width: 100px; margin-bottom: 50px"
-      >
-        <i class="material-icons white-text left">add_circle_outline</i>
-        Add new note
-      </button>
+      <div>
+        <button
+          class="btn waves-effect right modal-trigger"
+          style="margin-bottom: 50px"
+          href="#noteModal"
+        >
+          <i class="material-icons white-text left">add_circle_outline</i>
+          Add new note
+        </button>
+        {% include "assistant/notes/all_notes.html" %}
+      </div>
     </div>
   </div>
 </div>

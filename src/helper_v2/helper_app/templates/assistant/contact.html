@@ -1,0 +1,78 @@
+{% extends 'assistant/index.html' %} {% block content %}
+<a href="{% url 'contacts_list' %}" style="font-weight: bold"
+  ><i class="material-icons teal-text left large">arrow_back</i></a
+>
+<div class="container">
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p style="font-size: 20px; color: teal">First name:</p>
+            <blockquote>
+              <p>{{contacts.first_name}}</p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p style="font-size: 20px; color: teal">Last name:</p>
+            <blockquote>
+              <p>{{contacts.last_name}}</p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p style="font-size: 20px; color: teal">Phone:</p>
+            <blockquote>
+              <p>{{contacts.phone_number}}</p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p style="font-size: 20px; color: teal">Email:</p>
+            <blockquote>
+              <p>{{contacts.email}}</p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <p style="font-size: 20px; color: teal">Birthday:</p>
+            <blockquote>
+              <p>{{contacts.b_day}}</p>
+            </blockquote>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,15 +1,36 @@
 {% extends 'assistant/index.html' %} {% block content %}
-<nav>
-  <div class="blue nav-wrapper">
-    <a href="/" class="brand-logo center">Assistant</a>
-    <ul class="left hide-on-med-and-down">
-      <li><a href="/contacts_list">Contacts</a></li>
+<nav class="blue nav-extended">
+  <div class="nav-wrapper">
+    <a href="/" class="brand-logo">Assistant</a>
+    <ul
+      id="nav-mobile"
+      class="right hide-on-med-and-down"
+      style="display: flex; align-items: center"
+    >
+      <li>
+        {% if request.user.is_authenticated %}
+        <p>Hello, {{request.user|title}}</p>
+        {% endif %}
+      </li>
+      <li>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="btn waves-effect" style="background-color: #3cb371">
+          <i class="material-icons">exit_to_app</i>
+        </a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  <div class="nav-content">
+    <ul class="tabs tabs-transparent">
+      <li ><a href="/contacts_list">Contacts</a></li>
       <li><a href="/notes">Notes</a></li>
       <li><a href="/news">News</a></li>
       <li class="active"><a href="/files">Files</a></li>
       <li><a href="/aboutUs">About Us</a></li>
     </ul>
   </div>
+</nav>
 </nav>
 <div class="container">
   <h1>Hello! Here you can manage your files</h1>

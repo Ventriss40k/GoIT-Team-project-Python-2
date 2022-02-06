@@ -14,6 +14,7 @@ urlpatterns = [
          views.DeleteContact.as_view(), name='contact-delete'),
     path('contact-update/<int:pk>/',
          views.UpdateContact.as_view(), name='contact-update'),
+    path('contact/<int:pk>/', views.ContactDetailView.as_view(), name='contact'),     
     path('notes/', views.NotesListView.as_view(), name='notes'),
     path('notes/note/<int:pk>/', views.NoteDetailView.as_view(), name='note'),
     path('notes/note-create', views.NoteCreateView.as_view(), name='note-create'),
