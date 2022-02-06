@@ -1,55 +1,76 @@
 {% extends 'assistant/index.html' %} {% block content %}
-<nav>
-  <div class="blue nav-wrapper">
-    <a href="/" class="brand-logo center">Assistant</a>
-    <ul class="left hide-on-med-and-down">
-      <li class="active"><a class="active" href="/contacts_list">Contacts</a></li>
+<nav class="blue nav-extended">
+  <div class="nav-wrapper">
+    <a href="/" class="brand-logo">Assistant</a>
+    <ul
+      id="nav-mobile"
+      class="right hide-on-med-and-down"
+      style="display: flex; align-items: center"
+    >
+      <li>
+        {% if request.user.is_authenticated %}
+        <p>Hello, {{request.user|title}}</p>
+        {% endif %}
+      </li>
+      <li>
+        {% if request.user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="btn waves-effect" style="background-color: #3cb371">
+          <i class="material-icons">exit_to_app</i>
+        </a>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+  <div class="nav-content">
+    <ul class="tabs tabs-transparent">
+      <li class="active"><a href="/contacts_list">Contacts</a></li>
       <li><a href="/notes">Notes</a></li>
       <li><a href="/news">News</a></li>
+      <li><a href="/files">Files</a></li>
       <li><a href="/aboutUs">About Us</a></li>
     </ul>
   </div>
 </nav>
-<div class="container">
-  <h1>hello, this is contacts page</h1>
-
-  <div id="search-add-wrapper">
-    <form method="GET" >
-  
-      <input type='text' name='search-by-name' placeholder="Search by name"  style="width: 200pt;" >        
-      <input class="button" type="submit" value='Search'>      
-      
-    </form>
-    
-    <button class="btn waves-effect left modal-trigger" href="#contactModal">
-      <i class="material-icons white-text left">add_circle_outline</i>
-      Add
-    </button> 
-    <br>
-    <br>
-    <div id="Contacts">
-      
-      {% for contact in contacts %}
-      <a style="text-decoration-line: underline;" href="{% url 'contact-update' contact.id  %}">{{contact}}</a>
-      <div class="contact-controls">
-        <a class="delete-link" href="{% url 'contact-delete' contact.id %}"
-        style="font-size: x-small; margin-left: 50; text-decoration-color: brown;">&#215; click to delete </a>
-        <!-- <span class="handle">&nbsp;&#10247;</span> -->
-      </div>
+<div style="display: flex; justify-content: space-between; padding: 15px">
+  <div>
+    <h6 style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
+      Your contacts with birthdays this month:
+    </h6>
+    <ul>
+      {% for b_day in b_days %}
+      <li style="font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif">
+        <span>{{b_day.first_name}}</span> <span>{{b_day.last_name}}</span>
+      </li>
       {% endfor %}
-    </div>
-    
+    </ul>
   </div>
- 
-  
+
+  <div class="container">
+    <form class="col s12" style="padding: 0">
+      <div class="">
+        <div class="col s12">
+          <div class="input-field inline">
+            <input id="email_inline" type="text" name="search-by-name" autocomplete="off" />
+            <label for="email_inline">Search by name</label>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div style="display: flex; justify-content: space-between">
+      <div>{% include "assistant/all_contacts.html" %}</div>
+      <button class="btn waves-effect left modal-trigger" href="#contactModal">
+        <i class="material-icons white-text left">add_circle_outline</i>
+        Add new contact
+      </button>
+    </div>
+  </div>
 </div>
 <div id="contactModal" class="modal">
   <div class="modal-content">
     <h4>Add Contact</h4>
     <form method="POST" action="{% url 'contact-add' %}">
-      {% csrf_token %} 
-      {{form.as_p}}
-      
+      {% csrf_token %} {{form.as_p}}
+
       <label for="first_name"
         >First name
         <input name="first_name" id="first_name" autocomplete="off" style="height: 2rem" />
@@ -62,7 +83,13 @@
 
       <label for="phone_number"
         >Phone
-        <input type="tel" name="phone_number" id="phone_number" autocomplete="off" style="height: 2rem" />
+        <input
+          type="tel"
+          name="phone_number"
+          id="phone_number"
+          autocomplete="off"
+          style="height: 2rem"
+        />
       </label>
 
       <label for="email"
@@ -72,27 +99,13 @@
 
       <label for="b_day"
         >Birthday:
-        <input
-          type="date"
-          id="b_day"
-          name="b_day"
-          style="height: 2rem"
-          value=""
-          min=""
-          max=""
-        />
+        <input type="date" id="b_day" name="b_day" style="height: 2rem" value="" min="" max="" />
       </label>
-      <input type="submit" class="button" value="Submit">
+      <input type="submit" class="button" value="Submit" />
     </form>
   </div>
 </div>
 
-<div class="container"> 
-  <h6>Your contacts with birthdays this mounth:</h6>
-  {% for b_day in b_days %}
-  <p>    {{b_day}}   </p>
-  {% endfor %}
-</div>
 <script>
   let elem = document.querySelector('.modal');
   let instance = M.Modal.init(elem);

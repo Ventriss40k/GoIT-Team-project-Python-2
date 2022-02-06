@@ -1,16 +1,27 @@
-{% extends 'assistant/index.html' %} 
-{% block content %}
-
-<div class="header-bar">
-    <a href="{% url 'contacts_list' %}">&#8592; Back </a>
-</div>
-
-<div class="card-body">
-    <form method="POST" action="">
-        {% csrf_token %}
-        {{form.as_p}}
-        <input type="submit" class="button" value="Submit">
-    </form>
+{% extends 'assistant/index.html' %} {% block content %}
+<a href="{% url 'contacts_list' %}" style="font-weight: bold"
+  ><i class="material-icons teal-text left large">arrow_back</i></a
+>
+<div class="container">
+  <div class="row">
+    <div class="col s12 m7">
+      <div class="card horizontal">
+        <div class="card-stacked">
+          <div class="card-content">
+            <form method="POST" action="">
+              {% csrf_token %} {{form.as_p}}
+              <button
+                class="btn waves-effect left col s12"
+                style="max-width: 100px; margin-bottom: 50px"
+              >
+                update
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 {% endblock content %}

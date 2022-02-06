@@ -55,9 +55,9 @@ class HomeView(TemplateView):
 
 
 class ContactsView(LoginRequiredMixin, ListView):
-    template_name = "assistant/contacts_list.html"
     model = Contacts
     context_object_name = 'contacts'
+    template_name = "assistant/contacts_list.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -100,6 +100,12 @@ class AddContact(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super(AddContact, self).form_valid(form)
 
+class ContactDetailView(LoginRequiredMixin, DetailView):
+    model = Contacts 
+    context_object_name = "contacts"
+    template_name = 'assistant/contact.html'
+
+
 
 class UpdateContact(LoginRequiredMixin, UpdateView):
     model = Contacts
@@ -125,7 +131,7 @@ class DeleteContact(LoginRequiredMixin, DeleteView):
 class NotesListView(LoginRequiredMixin, ListView):
     model = Note
     context_object_name = "notes"
-    template_name = 'assistant/notes_list.html'
+    template_name = 'assistant/notes/notes_list.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -155,7 +161,7 @@ class NotesListView(LoginRequiredMixin, ListView):
 class NoteDetailView(LoginRequiredMixin, DetailView):
     model = Note 
     context_object_name = "note"
-    template_name = 'assistant/note.html'
+    template_name = 'assistant/notes/note.html'
 
 
 
@@ -164,7 +170,7 @@ class NoteCreateView(LoginRequiredMixin, CreateView):
     model = Note
     fields = ['title', 'description', 'tagsString']
     success_url = reverse_lazy('notes')
-    template_name = 'assistant/note_form.html'
+    template_name = 'assistant/notes/note_form.html'
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -175,13 +181,13 @@ class NoteUpdateView(LoginRequiredMixin, UpdateView):
     model = Note
     fields = ['title', 'description', 'tagsString']
     success_url = reverse_lazy('notes')
-    template_name = 'assistant/note_form.html'
+    template_name = 'assistant/notes/note_form.html'
 
 
 class NoteDeleteView(LoginRequiredMixin, DeleteView):
     model = Note
     context_object_name = "note"
-    template_name = 'assistant/note_confirm_delete.html'
+    template_name = 'assistant/notes/note_confirm_delete.html'
     success_url = reverse_lazy('notes')
     
 

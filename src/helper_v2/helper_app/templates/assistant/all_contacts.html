@@ -1,0 +1,34 @@
+<table class="highlight" style="min-width: 700px">
+  <tbody>
+    {% for contact in contacts %}
+    <tr>
+      <td style="font-size: 20px; color: black">{{contact}}</td>
+      <td class="right">
+        <a href="{% url 'contact-delete' contact.id %}">
+          <button class="btn waves-effect red">
+            <i class="material-icons">delete</i>
+          </button>
+        </a>
+      </td>
+      <td class="right">
+        <a class="" href="{% url 'contact-update' contact.id %}"
+          ><button class="btn waves-effect">
+            <i class="material-icons">create</i>
+          </button>
+        </a>
+      </td>
+      <td class="right">
+        <a class="" href="{% url 'contact' contact.id %}"
+          ><button class="btn waves-effect">
+            <i class="material-icons">description</i>
+          </button>
+        </a>
+      </td>
+    </tr>
+    {% empty %}
+    <div style="text-align: center; padding-bottom: 10px; line-height: 1em">
+      <h3>You don't have any contacts yet.</h3>
+    </div>
+    {% endfor %}
+  </tbody>
+</table>
