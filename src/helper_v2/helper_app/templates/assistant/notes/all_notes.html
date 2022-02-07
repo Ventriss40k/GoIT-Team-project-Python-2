@@ -2,7 +2,7 @@
   <tbody>
     {% for note in notes %}
     <tr>
-      <td style="font-size: 20px; color: black">{{note.title}}</td>
+      <td style="font-size: 20px; color: #fff">{{note.title}}</td>
       <td class="right">
         <a href="{% url 'note-delete' note.id %}">
           <button class="btn waves-effect red">
@@ -27,7 +27,7 @@
     </tr>
     {% empty %}
     <div style="text-align: center; padding-bottom: 10px; line-height: 1em">
-      <h3>You don't have any notes yet.</h3>
+      <h3 style="color: #fff">You don't have any notes yet.</h3>
     </div>
     {% endfor %}
   </tbody>
