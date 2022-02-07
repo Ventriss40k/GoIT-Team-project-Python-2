@@ -228,7 +228,7 @@ class AboutView(TemplateView):
     template_name = "assistant/about_us.html"
 
 
-class FilesView(TemplateView):
+class FilesView(LoginRequiredMixin,TemplateView):
     # AUTHORIZATION GOOGLE API
     SCOPES = ['https://www.googleapis.com/auth/drive'] # is a list of features for this exact service. can get one from Google drive docs
     SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json' # This is path to json file vith keys from service account
