@@ -231,7 +231,7 @@ class AboutView(TemplateView):
 class FilesView(LoginRequiredMixin,TemplateView):
     # AUTHORIZATION GOOGLE API
     SCOPES = ['https://www.googleapis.com/auth/drive'] # is a list of features for this exact service. can get one from Google drive docs
-    SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json' # This is path to json file vith keys from service account
+    SERVICE_ACCOUNT_FILE = r'D:\Admin\GitHub\Python\GoIT-Team-project-Python-2\src\helper_v2\key.json' # This is path to json file vith keys from service account
     credentials = service_account.Credentials.from_service_account_file(
             SERVICE_ACCOUNT_FILE, scopes=SCOPES) # credentials is user data, to grant him permission of doing smth
     service = build('drive', 'v3', credentials=credentials) # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
