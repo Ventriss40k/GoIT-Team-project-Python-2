@@ -124,3 +124,8 @@ sort/
 examples/
 alembic/
 margo.py
+
+#crdentials for googleapi - do not exclude
+!googleapi-key.json
+#Folder for downloaded files from google drive
+!Downloads

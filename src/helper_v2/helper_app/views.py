@@ -29,7 +29,7 @@ import io
 from django.core.files.storage import FileSystemStorage
 from helper_v2.settings import MEDIA_ROOT
 from django.contrib.auth.models import User
-
+from pathlib import Path
 
 load_dotenv()
 API_KEY = os.getenv("API_KEY")
@@ -214,7 +214,7 @@ class FilesView(LoginRequiredMixin,TemplateView):
     # is a list of features for this exact service. can get one from Google drive docs
     SCOPES = ['https://www.googleapis.com/auth/drive']
     # This is path to json file vith keys from service account
-    SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json'
+    SERVICE_ACCOUNT_FILE= os.path.join(os.path.dirname(__file__), Path('json-googleapi-key-here','googleapi-key.json'))
     credentials = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)  # credentials is user data, to grant him permission of doing smth
     # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
@@ -249,8 +249,7 @@ class FilesView(LoginRequiredMixin,TemplateView):
         elif request.POST["operation"] == 'download':
             file_id = request.POST['file_id']
             googleapirequest = service.files().get_media(fileId=file_id)
-            filepath = f'C:\\Users\\1\\Desktop\\googleapi-files\\downloaded\\' + \
-                request.POST['file_name']  # warning
+            filepath = os.path.join(os.path.dirname(__file__), Path('Downloads',request.POST['file_name']))
             fh = io.FileIO(filepath, 'wb')
             downloader = MediaIoBaseDownload(fh, googleapirequest)
             done = False
