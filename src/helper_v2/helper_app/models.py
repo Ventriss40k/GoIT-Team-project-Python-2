@@ -32,17 +32,28 @@ class Note(models.Model):
         return f'{self.title}'
 
 
-class FileTypes(models.Model):
-    file_type = models.CharField(max_length=20, unique=True)
-    file_extention = models.CharField(max_length=5)
+# class FileTypes(models.Model):
+#     file_type = models.CharField(max_length=20, unique=True)
+#     file_extention = models.CharField(max_length=5)
 
+
+# class Files(models.Model):
+#     user = models.ForeignKey(
+#         User, on_delete=models.CASCADE, null=False, blank=False)
+#     file_name = models.CharField(max_length=100)
+#     file_type = models.ForeignKey(
+#         FileTypes, to_field='file_type', on_delete=models.CASCADE, null=False, blank=False, )
+#     file_date = models.DateField()
+#     file_path = models.CharField(max_length=300)
+
+#     def __str__(self):
+#         return f'{self.file_name} {self.file_type} {self.file_date}'
 
 class Files(models.Model):
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE, null=False, blank=False)
+    user = User
     file_name = models.CharField(max_length=100)
-    file_type = models.ForeignKey(
-        FileTypes, to_field='file_type', on_delete=models.CASCADE, null=False, blank=False, )
+    file_ext = models.CharField(max_length=50)
+    file_type = models.CharField(max_length=50)
     file_date = models.DateField()
     file_path = models.CharField(max_length=300)
 

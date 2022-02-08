@@ -1,3 +1,4 @@
+from datetime import datetime
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -17,7 +18,7 @@ from django.utils import timezone, dateformat
 from dotenv import load_dotenv
 import requests
 import os
-from .models import Contacts, Note, Files, FileTypes
+from .models import Contacts, Note, Files
 
 from google.oauth2 import service_account  # for authorization
 # for downloading| uploading files
@@ -273,8 +274,17 @@ class FilesView(LoginRequiredMixin,TemplateView):
                 'parents': [folder_id]
             }
             media = MediaFileUpload(filepath, resumable=True)
-            googlefile = service.files().create(
-                body=file_metadata, media_body=media, fields='id').execute()
+
+            googlefile = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            print(request.user)
+    #         new_db_record = Files.objects.create(user = request.user,
+    # file_name = filename,
+    # file_ext = fileextension,
+    # file_type = 'testtype',
+    # file_date = datetime.now(),
+    # file_path = googlefile)
+
+
             return HttpResponse("upload file")
 
         else:
