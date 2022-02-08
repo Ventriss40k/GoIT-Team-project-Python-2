@@ -20,14 +20,15 @@ import requests
 import os
 from .models import Contacts, Note, Files
 
-from google.oauth2 import service_account # for authorization
-from googleapiclient.http import MediaIoBaseDownload,MediaFileUpload # for downloading| uploading files
-from googleapiclient.discovery import build # allows creating a resorce for easy acess to API
+from google.oauth2 import service_account  # for authorization
+# for downloading| uploading files
+from googleapiclient.http import MediaIoBaseDownload, MediaFileUpload
+# allows creating a resorce for easy acess to API
+from googleapiclient.discovery import build
 import io
 from django.core.files.storage import FileSystemStorage
-from helper_v2.settings import MEDIA_ROOT 
+from helper_v2.settings import MEDIA_ROOT
 from django.contrib.auth.models import User
-
 
 
 load_dotenv()
@@ -84,20 +85,6 @@ class ContactsView(LoginRequiredMixin, ListView):
             context['contacts'] = context['contacts'].filter(
                 first_name__istartswith=first_name_input)
 
-        last_name_input = self.request.GET.get('search-by-last-name') or ''
-        if last_name_input:
-            context['contacts'] = context['contacts'].filter(
-                last_name=last_name_input)
-
-        phone_input = self.request.GET.get('search-by-phone-number') or ''
-        if phone_input:
-            context['contacts'] = context['contacts'].filter(
-                phone_number=phone_input)
-
-        email_input = self.request.GET.get('search-by-email') or ''
-        if email_input:
-            context['contacts'] = context['contacts'].filter(
-                email=email_input)
         return context
 
 
@@ -111,11 +98,11 @@ class AddContact(LoginRequiredMixin, CreateView):
         form.instance.user = self.request.user
         return super(AddContact, self).form_valid(form)
 
+
 class ContactDetailView(LoginRequiredMixin, DetailView):
-    model = Contacts 
+    model = Contacts
     context_object_name = "contacts"
     template_name = 'assistant/contact.html'
-
 
 
 class UpdateContact(LoginRequiredMixin, UpdateView):
@@ -147,34 +134,28 @@ class NotesListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['notes'] = context['notes'].filter(user=self.request.user)
-        
+
         search_input_title = self.request.GET.get('search_title') or ''
         if search_input_title:
             context['notes'] = context['notes'].filter(
                 title__istartswith=search_input_title)
 
-        context['search_input_title'] = search_input_title 
-
+        context['search_input_title'] = search_input_title
 
         search_input_tag = self.request.GET.get('search_tag') or ''
         if search_input_tag:
             context['notes'] = context['notes'].filter(
                 tagsString__contains=search_input_tag)
 
-        context['search_input_tag'] = search_input_tag 
+        context['search_input_tag'] = search_input_tag
 
-
-        
-        return context  
-
+        return context
 
 
 class NoteDetailView(LoginRequiredMixin, DetailView):
-    model = Note 
+    model = Note
     context_object_name = "note"
     template_name = 'assistant/notes/note.html'
-
-
 
 
 class NoteCreateView(LoginRequiredMixin, CreateView):
@@ -200,12 +181,10 @@ class NoteDeleteView(LoginRequiredMixin, DeleteView):
     context_object_name = "note"
     template_name = 'assistant/notes/note_confirm_delete.html'
     success_url = reverse_lazy('notes')
-    
 
     def get_queryset(self):
         owner = self.request.user
         return self.model.objects.filter(user=owner)
-
 
 
 class NewsView(ListView):
@@ -214,7 +193,8 @@ class NewsView(ListView):
     @classmethod
     def fetch_news(cls):
         url = f'https://newsapi.org/v2/top-headlines?country=ua&apiKey={API_KEY}'
-        response = requests.get(url, headers={'Content-Type': 'application/json'})
+        response = requests.get(
+            url, headers={'Content-Type': 'application/json'})
         result = response.json()
         return result['articles']
 
@@ -231,41 +211,46 @@ class AboutView(TemplateView):
 
 class FilesView(LoginRequiredMixin,TemplateView):
     # AUTHORIZATION GOOGLE API
-    SCOPES = ['https://www.googleapis.com/auth/drive'] # is a list of features for this exact service. can get one from Google drive docs
-    SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json' # This is path to json file vith keys from service account
+    # is a list of features for this exact service. can get one from Google drive docs
+    SCOPES = ['https://www.googleapis.com/auth/drive']
+    # This is path to json file vith keys from service account
+    SERVICE_ACCOUNT_FILE = r'C:\Users\1\Downloads\goit-python-2-3532a63ebc79.json'
     credentials = service_account.Credentials.from_service_account_file(
-            SERVICE_ACCOUNT_FILE, scopes=SCOPES) # credentials is user data, to grant him permission of doing smth
-    service = build('drive', 'v3', credentials=credentials) # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
+        SERVICE_ACCOUNT_FILE, scopes=SCOPES)  # credentials is user data, to grant him permission of doing smth
+    # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
+    service = build('drive', 'v3', credentials=credentials)
 
-    #GET LIST OF ALL FILES 
+    # GET LIST OF ALL FILES
     results = service.files().list(pageSize=10,
-                                fields="nextPageToken, files(id, name, mimeType)").execute()
+                                   fields="nextPageToken, files(id, name, mimeType)").execute()
     nextPageToken = results.get('nextPageToken')
     while nextPageToken:
-            nextPage = service.files().list(pageSize=10,
-                                            fields="nextPageToken, files(id, name, mimeType, parents)",
-                                            pageToken=nextPageToken).execute()
-            nextPageToken = nextPage.get('nextPageToken')
-            results['files'] = results['files'] + nextPage['files']
+        nextPage = service.files().list(pageSize=10,
+                                        fields="nextPageToken, files(id, name, mimeType, parents)",
+                                        pageToken=nextPageToken).execute()
+        nextPageToken = nextPage.get('nextPageToken')
+        results['files'] = results['files'] + nextPage['files']
     list_of_files = results['files']
-    
+
     template_name = "assistant/files.html"
 
-    def get_context_data(self, list_of_files= list_of_files, **kwargs):
+    def get_context_data(self, list_of_files=list_of_files, **kwargs):
         context = super(FilesView, self).get_context_data(**kwargs)
         context['list_of_files'] = list_of_files
         return context
-    def post(self, request, service= service, *args, **kwargs ):
+
+    def post(self, request, service=service, *args, **kwargs):
         # DELETE
         if request.POST["operation"] == 'delete':
-            service.files().delete(fileId= request.POST['file_id']).execute()
+            service.files().delete(fileId=request.POST['file_id']).execute()
 
-            return HttpResponse("deleted file") 
+            return HttpResponse("deleted file")
         # DOWNLOAD
         elif request.POST["operation"] == 'download':
             file_id = request.POST['file_id']
             googleapirequest = service.files().get_media(fileId=file_id)
-            filepath = f'C:\\Users\\1\\Desktop\\googleapi-files\\downloaded\\'+  request.POST['file_name'] # warning
+            filepath = f'C:\\Users\\1\\Desktop\\googleapi-files\\downloaded\\' + \
+                request.POST['file_name']  # warning
             fh = io.FileIO(filepath, 'wb')
             downloader = MediaIoBaseDownload(fh, googleapirequest)
             done = False
@@ -275,18 +260,21 @@ class FilesView(LoginRequiredMixin,TemplateView):
             # UPLOAD
         elif request.POST["operation"] == 'upload':
             uploaded_file = request.FILES['file']
-            filename= uploaded_file.name
+            filename = uploaded_file.name
             fileextension = filename.split('.')[1].lower()
             fs = FileSystemStorage()
-            fs.save(filename,uploaded_file)
-            filepath = os.path.join(MEDIA_ROOT,filename) # creating filepath to local saved file
+            fs.save(filename, uploaded_file)
+            # creating filepath to local saved file
+            filepath = os.path.join(MEDIA_ROOT, filename)
 
-            folder_id = '1B-2uKukREH15gK5sHqW0Iif5lT_zRqiq' # folder id, can be acuired from url or from "list" method 
+            # folder id, can be acuired from url or from "list" method
+            folder_id = '1B-2uKukREH15gK5sHqW0Iif5lT_zRqiq'
             file_metadata = {
-                            'name': filename,
-                            'parents': [folder_id]
-                        }
+                'name': filename,
+                'parents': [folder_id]
+            }
             media = MediaFileUpload(filepath, resumable=True)
+
             googlefile = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
             print(request.user)
     #         new_db_record = Files.objects.create(user = request.user,
@@ -296,8 +284,8 @@ class FilesView(LoginRequiredMixin,TemplateView):
     # file_date = datetime.now(),
     # file_path = googlefile)
 
-            return HttpResponse("upload file")
 
+            return HttpResponse("upload file")
 
         else:
             return HttpResponse('invalid operation')

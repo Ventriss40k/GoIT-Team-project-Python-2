@@ -1,8 +1,7 @@
 (function () {
   tags = document.querySelector('#tagInput');
 
-  tags.addEventListener('keydown', tagInput);
-
+  tags?.addEventListener('keydown', tagInput);
   function tagInput(e) {
     if (e.keyCode != 13) {
       return;

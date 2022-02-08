@@ -2,7 +2,7 @@
   <tbody>
     {% for contact in contacts %}
     <tr>
-      <td style="font-size: 20px; color: black">{{contact}}</td>
+      <td style="font-size: 20px; color: #fff">{{contact}}</td>
       <td class="right">
         <a href="{% url 'contact-delete' contact.id %}">
           <button class="btn waves-effect red">
