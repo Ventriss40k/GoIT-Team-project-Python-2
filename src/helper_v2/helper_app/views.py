@@ -89,7 +89,7 @@ class ContactsView(LoginRequiredMixin, ListView):
 class AddContact(LoginRequiredMixin, CreateView):
     model = Contacts
     fields = ['first_name', 'last_name',
-              'phone_number', 'email', 'b_day', 'is_favorite']
+              'phone_number', 'email', 'b_day']
     success_url = reverse_lazy('contacts_list')
 
     def form_valid(self, form):
@@ -106,7 +106,7 @@ class ContactDetailView(LoginRequiredMixin, DetailView):
 class UpdateContact(LoginRequiredMixin, UpdateView):
     model = Contacts
     fields = ['first_name', 'last_name',
-              'phone_number', 'email', 'b_day', 'is_favorite']
+              'phone_number', 'email', 'b_day']
     success_url = reverse_lazy('contacts_list')
 
     def form_valid(self, form):
@@ -207,23 +207,24 @@ class AboutView(TemplateView):
     template_name = "assistant/about_us.html"
 
 
-class FilesView(LoginRequiredMixin,TemplateView):
+class FilesView(LoginRequiredMixin, TemplateView):
     # AUTHORIZATION GOOGLE API
     # is a list of features for this exact service. can get one from Google drive docs
     SCOPES = ['https://www.googleapis.com/auth/drive']
     # This is path to json file vith keys from service account
-    SERVICE_ACCOUNT_FILE= os.path.join(os.path.dirname(__file__), Path('json-googleapi-key-here','googleapi-key.json'))
+    SERVICE_ACCOUNT_FILE = os.path.join(os.path.dirname(__file__), Path(
+        'json-googleapi-key-here', 'googleapi-key.json'))
     credentials = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES)  # credentials is user data, to grant him permission of doing smth
     # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
     service = build('drive', 'v3', credentials=credentials)
 
     template_name = "assistant/files.html"
-    
+
     # GET LIST OF ALL FILES
-    def get_list_of_files(service =service):
+    def get_list_of_files(service=service):
         results = service.files().list(pageSize=10,
-                                    fields="nextPageToken, files(id, name, mimeType)").execute()
+                                       fields="nextPageToken, files(id, name, mimeType)").execute()
         nextPageToken = results.get('nextPageToken')
         while nextPageToken:
             nextPage = service.files().list(pageSize=10,
@@ -234,10 +235,10 @@ class FilesView(LoginRequiredMixin,TemplateView):
         list_of_files = results['files']
         return list_of_files
 
-    def get_context_data(self,service= service, **kwargs):
+    def get_context_data(self, service=service, **kwargs):
         context = super(FilesView, self).get_context_data(**kwargs)
         results = service.files().list(pageSize=10,
-                                    fields="nextPageToken, files(id, name, mimeType)").execute()
+                                       fields="nextPageToken, files(id, name, mimeType)").execute()
         nextPageToken = results.get('nextPageToken')
         while nextPageToken:
             nextPage = service.files().list(pageSize=10,
@@ -247,9 +248,8 @@ class FilesView(LoginRequiredMixin,TemplateView):
             results['files'] = results['files'] + nextPage['files']
         list_of_files = results['files']
         context['list_of_files'] = list_of_files
-        
-        return context
 
+        return context
 
     def post(self, request, service=service, *args, **kwargs):
 
@@ -261,7 +261,8 @@ class FilesView(LoginRequiredMixin,TemplateView):
         elif request.POST["operation"] == 'download':
             file_id = request.POST['file_id']
             googleapirequest = service.files().get_media(fileId=file_id)
-            filepath = os.path.join(os.path.dirname(__file__), Path('Downloads',request.POST['file_name']))
+            filepath = os.path.join(os.path.dirname(__file__), Path(
+                'Downloads', request.POST['file_name']))
             fh = io.FileIO(filepath, 'wb')
             downloader = MediaIoBaseDownload(fh, googleapirequest)
             done = False
@@ -286,6 +287,7 @@ class FilesView(LoginRequiredMixin,TemplateView):
             }
             media = MediaFileUpload(filepath, resumable=True)
 
-            googlefile = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            googlefile = service.files().create(
+                body=file_metadata, media_body=media, fields='id').execute()
 
         return redirect('files')
