@@ -218,31 +218,45 @@ class FilesView(LoginRequiredMixin,TemplateView):
     # creating a service, which use 3rd version REST API Google Drive, using acount (credentials)
     service = build('drive', 'v3', credentials=credentials)
 
-    # GET LIST OF ALL FILES
-    results = service.files().list(pageSize=10,
-                                   fields="nextPageToken, files(id, name, mimeType)").execute()
-    nextPageToken = results.get('nextPageToken')
-    while nextPageToken:
-        nextPage = service.files().list(pageSize=10,
-                                        fields="nextPageToken, files(id, name, mimeType, parents)",
-                                        pageToken=nextPageToken).execute()
-        nextPageToken = nextPage.get('nextPageToken')
-        results['files'] = results['files'] + nextPage['files']
-    list_of_files = results['files']
-
     template_name = "assistant/files.html"
+    
+    # GET LIST OF ALL FILES
+    def get_list_of_files(service =service):
+        results = service.files().list(pageSize=10,
+                                    fields="nextPageToken, files(id, name, mimeType)").execute()
+        nextPageToken = results.get('nextPageToken')
+        while nextPageToken:
+            nextPage = service.files().list(pageSize=10,
+                                            fields="nextPageToken, files(id, name, mimeType, parents)",
+                                            pageToken=nextPageToken).execute()
+            nextPageToken = nextPage.get('nextPageToken')
+            results['files'] = results['files'] + nextPage['files']
+        list_of_files = results['files']
+        return list_of_files
 
-    def get_context_data(self, list_of_files=list_of_files, **kwargs):
+    def get_context_data(self,service= service, **kwargs):
         context = super(FilesView, self).get_context_data(**kwargs)
+        results = service.files().list(pageSize=10,
+                                    fields="nextPageToken, files(id, name, mimeType)").execute()
+        nextPageToken = results.get('nextPageToken')
+        while nextPageToken:
+            nextPage = service.files().list(pageSize=10,
+                                            fields="nextPageToken, files(id, name, mimeType, parents)",
+                                            pageToken=nextPageToken).execute()
+            nextPageToken = nextPage.get('nextPageToken')
+            results['files'] = results['files'] + nextPage['files']
+        list_of_files = results['files']
         context['list_of_files'] = list_of_files
+        
         return context
 
+
     def post(self, request, service=service, *args, **kwargs):
+
         # DELETE
         if request.POST["operation"] == 'delete':
             service.files().delete(fileId=request.POST['file_id']).execute()
 
-            return HttpResponse("deleted file")
         # DOWNLOAD
         elif request.POST["operation"] == 'download':
             file_id = request.POST['file_id']
@@ -253,7 +267,7 @@ class FilesView(LoginRequiredMixin,TemplateView):
             done = False
             while done is False:
                 done = downloader.next_chunk()
-            return HttpResponse("downloaded file")
+
             # UPLOAD
         elif request.POST["operation"] == 'upload':
             uploaded_file = request.FILES['file']
@@ -273,16 +287,5 @@ class FilesView(LoginRequiredMixin,TemplateView):
             media = MediaFileUpload(filepath, resumable=True)
 
             googlefile = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
-            print(request.user)
-    #         new_db_record = Files.objects.create(user = request.user,
-    # file_name = filename,
-    # file_ext = fileextension,
-    # file_type = 'testtype',
-    # file_date = datetime.now(),
-    # file_path = googlefile)
 
-
-            return HttpResponse("upload file")
-
-        else:
-            return HttpResponse('invalid operation')
+        return redirect('files')
