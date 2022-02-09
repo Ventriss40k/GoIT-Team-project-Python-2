@@ -1,5 +1,5 @@
 {% extends 'assistant/index.html' %} {% block content %}
-<nav class="blue nav-extended">
+<nav class="blue nav-extended" style="padding-left: 15px">
   <div class="nav-wrapper">
     <a href="/" class="brand-logo">Assistant</a>
     <ul
@@ -31,11 +31,15 @@
     </ul>
   </div>
 </nav>
-<div class="container">
-  <h1>hello, this is aboutUs page</h1>
-  <p>Anton</p>
-  <p>Viktor</p>
-  <p>Yurii</p>
+<div class="container" style="color: #fff">
+  <div class="row">
+    <h4>TeamLead:</h4>
+    <p style="font-size: larger">Anton Nazaruk</p>
+    <h4>ScramMaster:</h4>
+    <p style="font-size: larger">Viktor Skavronskiy</p>
+    <h4>Developer:</h4>
+    <p style="font-size: larger">Yurii Zubar</p>
+  </div>
 </div>
 
 {% endblock %}
