@@ -1,5 +1,5 @@
 {% extends 'assistant/index.html' %} {% block content %}
-<nav class="blue nav-extended">
+<nav class="blue nav-extended" style="padding-left: 15px">
   <div class="nav-wrapper">
     <a href="/" class="brand-logo">Assistant</a>
     <ul
@@ -43,7 +43,7 @@
         <div class="card-image">
           <img src="{{i.urlToImage}}" alt="{{i.title}}" height="180" />
           <div class="card-action">
-            <a href="{{i.url}}" style="font-size: 10px">{{i.title}}</a>
+            <a href="{{i.url}}" style="font-size: 10px; font-weight: bolder; color: #708090">{{i.title}}</a>
           </div>
         </div>
       </div>

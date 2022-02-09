@@ -1,4 +1,3 @@
-from datetime import datetime
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -12,9 +11,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 
 from django.views import View
-from django.shortcuts import redirect, render, get_object_or_404
-from django.db import transaction
-from django.utils import timezone, dateformat
+from django.shortcuts import redirect, render
+from django.utils import timezone
 from dotenv import load_dotenv
 import requests
 import os
