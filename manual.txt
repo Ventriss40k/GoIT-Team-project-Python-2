@@ -1,3 +1,4 @@
+
 User manual
     General Information
     A personal assistant is designed to increase personal productivity. With the help of the assistant you can learn the latest news, work with personal contacts, notes and files.
@@ -7,41 +8,53 @@ Authorization process on the Portal
 To work with the Personal Assistant you need to go to the link http://127.0.0.1:8000
 As a result of the performed actions the automatic transition to the authorization page is carried out.
 
-IMPORTANTLY! If you are not yet registered in the application, you must first go through the registration process.
+IMPORTANT! 
+    If you are not registered in the application, you must first go through the registration process.
 
-The process of registration in the Personal Assistant is discussed in detail in the "Registration" section.
+    The process of registration in the Personal Assistant is discussed in detail in the "Registration" section.
 
-In order to log in to the Portal, it is necessary to enter the login and password specified during registration in the authorization window.
+    In order to log in to the Portal, it is necessary to enter the login and password specified during registration in the authorization window.
 
-To confirm the specified login, password and go to work on the Portal, you must click "Login"
-As a result of successful authorization there is a transition to the Main page of the Personal Assistant.
+    To confirm the specified login, password and go to work on the Portal, you must click "Login"
+    As a result of successful authorization there is a transition to the Main page of the Personal Assistant.
 
 In the event that any errors occurred during registration, the corresponding error message will be displayed in the authorization window. Until the error is corrected, it will be impossible to log in to the Portal.
 
 Registration
-In order to register in the Personal Assistant, you need to select the menu item "Registration" on the authorization page.
-As a result of the performed actions there is a transition to the registration form on the Portal, in which it is necessary to specify the following data:
-- Login
-- Password
-- Re-enter the password
+    In order to register in the Personal Assistant, you need to select the menu item "Registration" on the authorization page.
+    As a result of the performed actions there is a transition to the registration form on the Portal, in which it is necessary to specify the following data:
+    - Login
+    - Password
+    - Re-enter the password
 
 Contacts section
-The Contacts section allows the user to create, edit, delete and view existing contacts of individuals and search for them among the created data by the name of the person.
-To create a new contact, click the "ADD NEW CONTACT" button, enter the contact details of the person and click the "Submit" button. The assistant checks the entered phone numbers and e-mails to avoid incorrect input by the user.
-You can view the full list of contacts on the "Contacts" page. To search the list of contacts by name, enter the search name or its beginning in the search bar and press "Enter".
-To view all available information, click on the "details" button.
-To edit the contact information, click the "update" button to make the desired changes and confirm with the "update" button. If the user does not want to save the changes, but wants to leave the contact in the previous state, you need to click on the "Back" button.
-To delete contacts, click the "Delete" button and in the pop-up window confirm your intention to delete all contact information.
+    The Contacts section allows the user to create, edit, delete and view existing contacts of individuals and search for them among the created data by person's name.
+    To create a new contact, click the "ADD NEW CONTACT" button, enter the contact details of the person and click the "Submit" button. The assistant checks the entered phone numbers and e-mails to avoid incorrect input by the user.
+    You can view the full list of contacts on the "Contacts" page. To search the list of contacts by name, enter the search name or its beginning in the search bar and press "Enter".
+    To view all available information, click on the "details" button.
+    To edit the contact information, click the "edit" button to make the desired changes and confirm with the "update" button. If the user does not want to save the changes, but wants to leave the contact in the previous state, you need to click on the "Back" button.
+    To delete contacts, click the "Delete" button and in the pop-up window confirm your intention to delete all contact information.
 
 
 Notes section
-The notes section allows you to create, edit, delete notes, add tags to them, and search for notes by tags.
+    The notes section allows you to create, edit, delete notes, add tags to them, and search for notes by tags.
+    To create a note, press the "" button. In the pop-up window, specify the title of the note, its text and tags, which can then be used to search for notes. To enter several tags after each of them, you need to press "Enter". Confirm the creation of the note by pressing the "" button.
+    To edit a note, press the "edit" button, correct the necessary parts of the note and confirm the editing with the "update" button.
+    To delete a note, press the "Delete" button and confirm the intention to delete.
+    To search for notes by tags, you need to write the appropriate tag, or part of it, in the search field and click "". as a result of search we will receive a list of notes in which tags the specified text is present.
+
 
 News section
-The news section displays current user news.
+    The news section displays current user news. Here you can see news from the BBC-news agency under the tag "Ukraine". The Personal Assistant does not have an interface to change the source of the news or choose another topic.
 
 File section
-The files section allows the user to save files to the server, view saved files and download downloaded files to your computer.
+    The files section allows the user to save files to the server, view saved files and download downloaded files to your computer.
+    Google Assistant uses Google Drive as a remote server. To use this repository, the user must be registered on this service and receive a Json file with access to google api. How to get such a file can be seen in the video at https://youtu.be/Lxxge05UP8M.
+    In the files section, the user immediately sees the entire list of files that have been downloaded to the remote storage.
+    To download the file, click "" select the file in the pop-up window on your computer and click "".
+    To download a file to your computer from a remote storage, find it in the file list and click "".
+    To delete a file from the remote storage, click on the "Delete" button next to it and confirm the intention to delete.
+ 
 
 Section about developers
-In this section, the user can find out information about the developers and, if desired, write them comments and suggestions to the Personal Assistant. 
+    In this section, the user can find out information about the developers and, if desired, write them comments and suggestions to the Personal Assistant.
